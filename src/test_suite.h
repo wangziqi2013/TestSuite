@@ -349,18 +349,14 @@ class Argv {
    * GetValueAsUL() - This function returns value as a unsigned long integer
    *                  the length of which is platform dependent
    *
-   * Whether the value is correctly parsed or not depends on the input. This
-   * function checks correctness by:
-   *   1. Call std::atoul() to convert the number in a local buffer
-   *   2. Call std::to_string() to cast it back to string and check against
-   *      the stored string object. If they are not equivalent then we
-   *      know the digits are not parsed correctly
-   *
    * This function takes a pointer argument pointing to the value that
    * will be modified if the argument value is found and is legal.
    * The return value is true if either the argument value is not found
    * or it is found and legal. If the value is found but illegal then 
    * return value is false
+   *
+   * If the key is not found then the given pointer is not modified; otherwise
+   * if a key is found then the pointer will be written with the value
    *
    * This function is not thread-safe since it uses global variable
    */
@@ -416,7 +412,7 @@ class Envp {
    * If the key does not exist then just use empty string. Since the value of 
    * an environmental key could not be empty string
    */
-  std::string Get(const std::string &key) const {
+  static std::string Get(const std::string &key) const {
     char *ret = getenv(key.c_str());
     if(ret == nullptr) {
       return std::string{""}; 
@@ -425,7 +421,42 @@ class Envp {
     return std::string{ret};
   }
   
+  /*
+   * operator() - This is called with an instance rather than class name
+   */
+  std::string operator()(const std::string &key) const {
+    return Envp::Get(key);
+  }
   
+  /*
+   * GetValueAsUL() - Returns the value by argument as unsigned long
+   *
+   * If the env var is found and the value is parsed correctly then return true 
+   * If the env var is not found then retrun true, and value_p is not modified
+   * If the env var is found but value could not be parsed correctly then
+   *   return false and value is not modified 
+   */
+  static bool GetValueAsUL(const std::string &key, 
+                           unsigned long *value_p) const {
+    const std::string value = Envp::Get(key);
+    
+    // Probe first character - if is '\0' then we know length == 0
+    if(value.c_str()[0] == '\0') {
+      return true;
+    }
+    
+    unsigned long result;
+    
+    try {
+      result = std::stoul(value);
+    } catch(...) {
+      return false; 
+    } 
+    
+    *value_p = result;
+    
+    return true;
+  }
 };
  
 #endif
