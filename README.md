@@ -16,3 +16,16 @@ Timer timer{true};
 double duration = timer.Stop();
 ```
 
+class Random
+============
+Random class generates random number in a given constant interval. Node that the interval is specified as part of the template argument, limiting its usage since it does not accept run-time variables. Also note that the interval given is half-open, i.e. [lower, upper).
+
+```c
+// Integer type, low
+Random<uint64_t, 0UL, 100UL> r{};
+
+// Either call Get() explicitly or use operator()
+uint64_t t1 = r.Get();
+uint64_t t2 = r();
+```
+
