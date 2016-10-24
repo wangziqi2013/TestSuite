@@ -23,7 +23,11 @@
 
 #include "common.h" 
 
+// Print a given name as test name
 void PrintTestName(const char *name);
+
+#define _PrintTestName() { PrintTestName(__FUNCTION__); }
+
 void SleepFor(uint64_t sleep_ms); 
 int GetThreadAffinity();
 void PinToCore(size_t core_id);
@@ -412,7 +416,7 @@ class Envp {
    * If the key does not exist then just use empty string. Since the value of 
    * an environmental key could not be empty string
    */
-  static std::string Get(const std::string &key) const {
+  static std::string Get(const std::string &key) {
     char *ret = getenv(key.c_str());
     if(ret == nullptr) {
       return std::string{""}; 
@@ -437,7 +441,7 @@ class Envp {
    *   return false and value is not modified 
    */
   static bool GetValueAsUL(const std::string &key, 
-                           unsigned long *value_p) const {
+                           unsigned long *value_p) {
     const std::string value = Envp::Get(key);
     
     // Probe first character - if is '\0' then we know length == 0
