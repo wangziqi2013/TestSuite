@@ -402,6 +402,30 @@ class Argv {
   const std::vector<std::string> &GetArgList() const {
     return arg_list; 
   }
- };
+};
+
+
+/*
+ * class Envp() - Reads environmental variables 
+ */
+class Envp {
+ public:
+  /*
+   * Get() - Returns a string representing the value of the given key
+   *
+   * If the key does not exist then just use empty string. Since the value of 
+   * an environmental key could not be empty string
+   */
+  std::string Get(const std::string &key) const {
+    char *ret = getenv(key.c_str());
+    if(ret == nullptr) {
+      return std::string{""}; 
+    } 
+    
+    return std::string{ret};
+  }
+  
+  
+};
  
 #endif
