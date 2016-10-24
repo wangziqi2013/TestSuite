@@ -5,11 +5,12 @@ The initial motivation of this repo is from EpochManager project which is also i
 
 class Timer
 ===========
-Timer class that provides high precision timing.
+Timer class that provides high precision timing. Usually for thread timing
 
-Usage:
 ```c
-// This creates and starts timer
+// This creates and starts timer. If false is passed then it does not start
+// automatically, and requires call to Start() to start it.
+// Multiple calls to Start() only record starting time for the last call
 Timer timer{true};
 ...
 double duration = timer.Stop();
