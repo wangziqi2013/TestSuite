@@ -42,7 +42,7 @@ void StartThreads(uint64_t num_threads, Fn &&fn, Args &&... args) {
  * This generator is a template class letting users to choose the number
  *
  * Note that this object uses C++11 library generator which is slow, and super
- * non-scalable. For 
+ * non-scalable.
  */
 template <typename IntType,
           IntType lower,
@@ -162,7 +162,8 @@ class Timer {
  * Please note that here upper is not inclusive (i.e. it will not appear as the 
  * random number)
  */
-template <uint64_t lower = 0UL, uint64_t upper = UINT64_MAX>
+template <uint64_t lower = 0UL, 
+          uint64_t upper = UINT64_MAX>
 class SimpleInt64Random {
  public:
    
