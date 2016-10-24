@@ -8,8 +8,10 @@ class Timer
 Timer class that provides high precision timing.
 
 Usage:
+```c
 // This creates and starts timer
 Timer timer{true};
 ...
 double duration = timer.Stop();
+```
 
