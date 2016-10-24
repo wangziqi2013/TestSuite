@@ -1,14 +1,27 @@
 
 #pragma once
 
+#ifndef _TESTSUITE_H
+#define _TESTSUITE_H
+
 #include <random>
 
 #include <sched.h>
-#include "../src/common.h"
 #include <map>
 #include <cmath>
 #include <cstring>
 #include <string>
+#include <cassert>
+#include <thread>
+#include <cstdio>
+#include <cstdlib>
+#include <vector>
+#include <unordered_map>
+#include <atomic>
+#include <thread>
+#include <cstdint>
+
+#include "common.h" 
 
 void PrintTestName(const char *name);
 void SleepFor(uint64_t sleep_ms); 
@@ -390,3 +403,5 @@ class Argv {
     return arg_list; 
   }
  };
+ 
+#endif
