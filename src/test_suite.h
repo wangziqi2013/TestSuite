@@ -568,7 +568,7 @@ class Zipfian {
    * n having the same name as a member is a problem brought about by the
    * transformation
    */
-  static void Zipfian(uint64_t n, double theta, uint64_t rand_seed) {
+  Zipfian(uint64_t n, double theta, uint64_t rand_seed) {
     assert(n > 0);
     if (theta > 0.992 && theta < 1) {
       fprintf(stderr, "theta > 0.992 will be inaccurate due to approximation\n");
@@ -590,7 +590,7 @@ class Zipfian {
       rand_seed = rand_seed % n;
     } else if (theta > 0. && theta < 1.) {
       this->alpha = 1. / (1. - theta);
-      this->thres = 1. + pow_approx(0.5, theta);
+      this->thres = 1. + PowApprox(0.5, theta);
     } else {
       this->alpha = 0.;  // unused
       this->thres = 0.;  // unused
@@ -617,12 +617,12 @@ class Zipfian {
   /*
    * Get() - Return the next number in the Zipfian distribution
    */
-  static uint64_t Get() {
+  uint64_t Get() {
     if (this->last_n != this->n) {
       if (this->theta > 0. && this->theta < 1.) {
         this->zetan = Zeta(this->last_n, this->zetan, this->n, this->theta);
-        this->eta = (1. - pow_approx(2. / (double)this->n, 1. - this->theta)) /
-                     (1. - zeta(0, 0., 2, this->theta) / this->zetan);
+        this->eta = (1. - PowApprox(2. / (double)this->n, 1. - this->theta)) /
+                     (1. - Zeta(0, 0., 2, this->theta) / this->zetan);
       }
       this->last_n = this->n;
       this->dbl_n = (double)this->n;
