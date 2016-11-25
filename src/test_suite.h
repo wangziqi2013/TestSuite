@@ -20,7 +20,7 @@
 #include <atomic>
 #include <thread>
 #include <cstdint>
-
+#include <iostream>
 
 #include "common.h" 
 
