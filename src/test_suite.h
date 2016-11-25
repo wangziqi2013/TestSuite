@@ -904,6 +904,76 @@ class CacheMeter {
   }
 };
 
+/*
+ * class Permutation - Generates permutation of k numbers, ranging from 
+ *                     0 to k - 1
+ *
+ * This is usually used to randomize insert() to a data structure such that
+ *   (1) Each Insert() call could hit the data structure
+ *   (2) There is no extra overhead for failed insertion because all keys are
+ *       unique
+ */
+template <typename IntType> 
+class Permutation {
+ private:
+  std::vector<IntType> data;
+  
+ public:
+  
+  /*
+   * Generate() - Generates a permutation and store them inside data
+   */
+  void Generate(size_t count, IntType start=IntType{0}) {
+    // Extend data vector to fill it with elements
+    data.resize(count);  
+
+    // This function fills the vector with IntType ranging from
+    // start to start + count - 1
+    std::iota(data.begin(), data.end(), start);
+    
+    // The two arguments define a closed interval, NOT open interval
+    Random<IntType> rand{0, static_cast<IntType>(count) - 1};
+    
+    // Then swap all elements with a random position
+    for(size_t i = 0;i < count;i++) {
+      IntType random_key = rand();
+      
+      // Swap two numbers
+      std::swap(data[i], data[random_key]);
+    }
+    
+    return;
+  }
+   
+  /*
+   * Constructor
+   */
+  Permutation() {}
+  
+  /*
+   * Constructor - Starts the generation process
+   */
+  Permutation(size_t count, IntType start=IntType{0}) {
+    Generate(count, start);
+    
+    return;
+  }
+  
+  /*
+   * operator[] - Accesses random elements
+   *
+   * Note that return type is reference type, so element could be
+   * modified using this method 
+   */
+  inline IntType &operator[](size_t index) {
+    return data[index];
+  }
+  
+  inline const IntType &operator[](size_t index) const {
+    return data[index];
+  }
+};
+
 #endif
  
 #endif
