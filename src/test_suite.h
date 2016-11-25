@@ -21,6 +21,7 @@
 #include <thread>
 #include <cstdint>
 
+
 #include "common.h" 
 
 // Print a given name as test name
@@ -60,10 +61,10 @@ void StartThreads(uint64_t num_threads, Fn &&fn, Args &&... args) {
  *
  * Note that this object uses C++11 library generator which is slow, and super
  * non-scalable.
+ *
+ * Note 2: lower and upper are both inclusive bounds
  */
-template <typename IntType,
-          IntType lower,
-          IntType upper>
+template <typename IntType>
 class Random {
  private:
   std::random_device device;
@@ -74,8 +75,11 @@ class Random {
   
   /*
    * Constructor - Initialize random seed and distribution object
+   *
+   * Lower and upper are both inclusive bounds, which means the random number
+   * is inside range defined by [lower, upper] instead of [lower, upper)
    */
-  Random() :
+  Random(IntType lower, IntType upper) :
     device{},
     engine{device()},
     dist{lower, upper}
