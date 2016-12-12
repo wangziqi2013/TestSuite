@@ -28,7 +28,7 @@ Random<uint64_t, 0UL, 100UL> r{};
 uint64_t t1 = r.Get();
 uint64_t t2 = r();
 ```
-
+ 
 class SimpleInt64Random
 =======================
 SimpleInt64Random implements a simple integer hashing function applied to uint64_t. It could be used as a hash function directly by calling operator() and providing a seed and salt, or be used as a pseudo-random number generator. The seed and salt value determines the hash number returned, and could be used to distinguish between different test cases (e.g. in a loop for i = 1 to 10, valeu i could be used as part of the salt, making each iterator different for i).
