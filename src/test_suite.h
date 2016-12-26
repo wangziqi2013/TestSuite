@@ -22,6 +22,10 @@
 #include <cstdint>
 #include <iostream>
 
+// This header defines endian swap and byte ordering on the host
+// architecture
+#include <endian.h>
+
 #include "common.h" 
 
 // Print a given name as test name
@@ -1003,6 +1007,8 @@ class IntsKey {
   
   // This is the array we use for storing integers
   unsigned char data[key_size_byte];
+  
+  
  public:  
 };
 
