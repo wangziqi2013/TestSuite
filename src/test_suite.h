@@ -1034,6 +1034,15 @@ class IntsKey {
     return htobe32(data); 
   }
   
+  /*
+   * EightBytesToBigEndian() - Change 8 bytes to big endian format
+   *
+   * This function uses BSWAP instruction
+   */
+  inline uint64_t EightBytesToBigEndian(uint64_t data) {
+    return htobe64(data);
+  }
+  
  public:  
 };
 
