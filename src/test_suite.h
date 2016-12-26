@@ -1009,13 +1009,29 @@ class IntsKey {
   unsigned char data[key_size_byte];
   
   /*
-   * TwoBytesToBigEndian() - Change to big endian
+   * TwoBytesToBigEndian() - Change 2 bytes to big endian
    *
    * This function could be achieved using XCHG instruction; so do not write
    * your own
+   *
+   * i.e. MOV AX, WORD PTR [data]
+   *      XCHG AH, AL
    */
   inline uint16_t TwoBytesToBigEndian(uint16_t data) {
     return htobe16(data);  
+  }
+  
+  /*
+   * FourBytesToBigEndian() - Change 4 bytes to big endian format
+   *
+   * This function uses BSWAP instruction in one atomic step; do not write
+   * your own
+   *
+   * i.e. MOV EAX, WORD PTR [data]
+   *      BSWAP EAX
+   */
+  inline uint32_t FourBytesToBigEndian(uint32_t data) {
+    return htobe32(data); 
   }
   
  public:  
