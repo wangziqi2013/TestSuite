@@ -1136,6 +1136,16 @@ class IntsKey {
     
     return;
   }
+  
+  /*
+   * GetInteger() - Extracts an integer from the given offset
+   *
+   * This function has the same limitation as stated for AddInteger()
+   */
+  template <typename IntType>
+  inline IntType GetInteger(int offset) {
+    
+  }
 };
 
 #endif
