@@ -1019,7 +1019,7 @@ class IntsKey {
    * i.e. MOV AX, WORD PTR [data]
    *      XCHG AH, AL
    */
-  inline uint16_t TwoBytesToBigEndian(uint16_t data) {
+  inline static uint16_t TwoBytesToBigEndian(uint16_t data) {
     return htobe16(data);  
   }
   
@@ -1032,7 +1032,7 @@ class IntsKey {
    * i.e. MOV EAX, WORD PTR [data]
    *      BSWAP EAX
    */
-  inline uint32_t FourBytesToBigEndian(uint32_t data) {
+  inline static uint32_t FourBytesToBigEndian(uint32_t data) {
     return htobe32(data); 
   }
   
@@ -1041,15 +1041,22 @@ class IntsKey {
    *
    * This function uses BSWAP instruction
    */
-  inline uint64_t EightBytesToBigEndian(uint64_t data) {
+  inline static uint64_t EightBytesToBigEndian(uint64_t data) {
     return htobe64(data);
-  }
+  }  
   
   /*
    * SignFlip() - Flips the highest bit of a given integral type
+   *
+   * This flip is logical, i.e. it happens on the logical highest bit of an 
+   * integer. The actual position on the address space is related to endianess
+   * Therefore this should happen first.
+   *
+   * It does not matter whether IntType is signed or unsigned because we do
+   * not use the sign bit
    */
   template <typename IntType>
-  inline IntType SignFlip(IntType data) {
+  inline static IntType SignFlip(IntType data) {
     // This sets 1 on the MSB of the corresponding type
     IntType mask = 0x1 << (sizeof(IntType) * 8 - 1);
     
@@ -1058,7 +1065,13 @@ class IntsKey {
   
  public:
   
-  void AddInteger() 
+  /*
+   * AddInteger() - Adds a new integer into the compact form
+   */
+  template <typename IntType>
+  void AddInteger(IntType data, int offset) {
+    IntType sign_flipped = SignFlip<IntType>(data);
+  }
 };
 
 #endif
