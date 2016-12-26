@@ -1081,7 +1081,6 @@ class IntsKey {
     return EightBytesToBigEndian(data);
   }
   
-  
   /*
    * SignFlip() - Flips the highest bit of a given integral type
    *
@@ -1103,11 +1102,39 @@ class IntsKey {
  public:
   
   /*
+   * Constructor
+   */
+  IntsKey() {
+    ZeroOut();
+    
+    return;
+  }
+  
+  /*
+   * ZeroOut() - Sets all bits to zero
+   */
+  inline void ZeroOut() {
+    memset(data, 0x00, key_size_byte);
+    
+    return;
+  }
+  
+  /*
    * AddInteger() - Adds a new integer into the compact form
+   *
+   * Note that IntType must be of the following 8 types:
+   *   int8_t; uint8_t; int16_t; uint16_t; int32_t; uint32_t; int64_t; uint64_t
+   * Otherwise the result is undefined
    */
   template <typename IntType>
-  void AddInteger(IntType data, int offset) {
+  inline void AddInteger(IntType data, int offset) {
     IntType sign_flipped = SignFlip<IntType>(data);
+    IntType big_endian = ToBigEndian(data);
+    
+    // This will almost always be optimized into single move
+    memcpy(data + offset, &big_endian, sizeof(IntType));
+    
+    return;
   }
 };
 
