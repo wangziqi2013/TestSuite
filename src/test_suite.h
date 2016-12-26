@@ -904,8 +904,6 @@ class CacheMeter {
   }
 };
 
-
-
 #endif
 
 /*
@@ -976,6 +974,28 @@ class Permutation {
   inline const IntType &operator[](size_t index) const {
     return data[index];
   }
+};
+
+/*
+ * class IntsKey - Compact representation of integers of different length
+ * 
+ * This class is used for storing multiple integral fields into a compact
+ * array representation. This class is largely used as a static object, 
+ * because special storage format is used to ensure a fast comparison 
+ * implementation.
+ *
+ * Integers are stored in a big-endian and sign-magnitute format. Big-endian
+ * favors comparison since we could always start comparison using the first few
+ * bytes. This gives the compiler opportunities to optimize comparison
+ * using advanced techniques such as SIMD or loop unrolling. 
+ *
+ * For details of how and why integers must be stored in a big-endian and 
+ * sign-magnitude format, please refer to adaptive radix tree's key format
+ */
+class IntsKey {
+ private:
+ 
+ public:  
 };
 
 #endif
