@@ -1008,6 +1008,15 @@ class IntsKey {
   // This is the array we use for storing integers
   unsigned char data[key_size_byte];
   
+  /*
+   * TwoBytesToBigEndian() - Change to big endian
+   *
+   * This function could be achieved using XCHG instruction; so do not write
+   * your own
+   */
+  inline uint16_t TwoBytesToBigEndian(uint16_t data) {
+    return htobe16(data);  
+  }
   
  public:  
 };
