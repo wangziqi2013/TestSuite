@@ -904,6 +904,10 @@ class CacheMeter {
   }
 };
 
+
+
+#endif
+
 /*
  * class Permutation - Generates permutation of k numbers, ranging from 
  *                     0 to k - 1
@@ -974,6 +978,4 @@ class Permutation {
   }
 };
 
-#endif
- 
 #endif
