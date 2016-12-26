@@ -1046,6 +1046,43 @@ class IntsKey {
   }  
   
   /*
+   * ToBigEndian() - Overloaded version for all kinds of integral data types
+   */
+  
+  inline static uint8_t ToBigEndian(uint8_t data) {
+    return data;
+  }
+  
+  inline static int8_t ToBigEndian(int8_t data) {
+    return data;
+  }
+  
+  inline static uint16_t ToBigEndian(uint16_t data) {
+    return TwoBytesToBigEndian(data);
+  }
+  
+  inline static int16_t ToBigEndian(int16_t data) {
+    return TwoBytesToBigEndian(data);
+  }
+  
+  inline static uint32_t ToBigEndian(uint32_t data) {
+    return FourBytesToBigEndian(data);
+  }
+  
+  inline static int32_t ToBigEndian(int32_t data) {
+    return FourBytesToBigEndian(data);
+  }
+  
+  inline static uint64_t ToBigEndian(uint64_t data) {
+    return EightBytesToBigEndian(data);
+  }
+  
+  inline static int64_t ToBigEndian(int64_t data) {
+    return EightBytesToBigEndian(data);
+  }
+  
+  
+  /*
    * SignFlip() - Flips the highest bit of a given integral type
    *
    * This flip is logical, i.e. it happens on the logical highest bit of an 
