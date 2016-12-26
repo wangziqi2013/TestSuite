@@ -991,10 +991,18 @@ class Permutation {
  *
  * For details of how and why integers must be stored in a big-endian and 
  * sign-magnitude format, please refer to adaptive radix tree's key format
+ *
+ * Note: IntsKey is always word-aligned on x86-64. KeySize is the number of 
+ * 64 bit words inside the key, not byte size
  */
+template <size_t KeySize>
 class IntsKey {
  private:
- 
+  // This is the actual byte size of the key
+  static constexpr size_t key_size_byte = KeySize * 64UL;
+  
+  // This is the array we use for storing integers
+  unsigned char data[key_size_byte];
  public:  
 };
 
