@@ -1007,6 +1007,8 @@ class IntsKey {
   
   // This is the array we use for storing integers
   unsigned char data[key_size_byte];
+ 
+ private:
   
   /*
    * TwoBytesToBigEndian() - Change 2 bytes to big endian
@@ -1043,7 +1045,20 @@ class IntsKey {
     return htobe64(data);
   }
   
- public:  
+  /*
+   * SignFlip() - Flips the highest bit of a given integral type
+   */
+  template <typename IntType>
+  inline IntType SignFlip(IntType data) {
+    // This sets 1 on the MSB of the corresponding type
+    IntType mask = 0x1 << (sizeof(IntType) * 8 - 1);
+    
+    return data ^ mask;
+  }
+  
+ public:
+  
+  void AddInteger() 
 };
 
 #endif
