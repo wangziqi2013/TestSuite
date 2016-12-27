@@ -1046,6 +1046,27 @@ class IntsKey {
   }  
   
   /*
+   * TwoBytesToHost() - Converts back two byte integer to host byte order
+   */
+  inline static uint16_t TwoBytesToHost(uint16_t data) {
+    return be16toh(data); 
+  }
+  
+  /*
+   * FourBytesToHost() - Converts back four byte integer to host byte order
+   */
+  inline static uint32_t FourBytesToHost(uint32_t data) {
+    return be32toh(data); 
+  }
+  
+  /*
+   * EightBytesToHost() - Converts back eight byte integer to host byte order
+   */
+  inline static uint64_t EightBytesToHost(uint64_t data) {
+    return be64toh(data); 
+  }
+  
+  /*
    * ToBigEndian() - Overloaded version for all kinds of integral data types
    */
   
