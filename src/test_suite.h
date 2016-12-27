@@ -1215,8 +1215,8 @@ class IntsKey {
   /*
    * Compare() - Compares two IntsType object of the same length
    */
-  static inline int Compare(const IntsType<KeySize> &a, 
-                            const IntyType<KeySize> &b) {
+  static inline int Compare(const IntsKey<KeySize> &a, 
+                            const IntsKey<KeySize> &b) {
     return memcmp(a.data, b.data, key_size_byte); 
   }
 };
