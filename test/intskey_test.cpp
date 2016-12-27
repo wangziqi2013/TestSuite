@@ -40,6 +40,9 @@ void TestIntsKeySetAndGet() {
   assert(k2.GetUnsignedInteger<decltype(b2)>(b_offset) == b2);
   assert(k2.GetInteger<decltype(c2)>(c_offset) == c2);
 
+  assert(decltype(k1)::LessThan(k1, k2) == true);
+  assert(decltype(k1)::Equals(k1, k2) == false);
+
   k1.PrintRawData();
   k2.PrintRawData();
 
