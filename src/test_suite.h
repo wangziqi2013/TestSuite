@@ -1208,6 +1208,16 @@ class IntsKey {
     
     // This always returns an unsigned number
     auto host_endian = ToHostEndian(*ptr);
+    
+    return SignFlip<IntType>(static_cast<IntType>(host_endian));
+  }
+  
+  /*
+   * Compare() - Compares two IntsType object of the same length
+   */
+  static inline int Compare(const IntsType<KeySize> &a, 
+                            const IntyType<KeySize> &b) {
+    return memcmp(a.data, b.data, key_size_byte); 
   }
 };
 
