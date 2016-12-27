@@ -1006,7 +1006,7 @@ class IntsKey {
   static constexpr size_t key_size_byte = KeySize * 64UL;
   
   // This is the array we use for storing integers
-  unsigned char data[key_size_byte];
+  unsigned char key_data[key_size_byte];
  
  private:
   
@@ -1171,7 +1171,7 @@ class IntsKey {
    * ZeroOut() - Sets all bits to zero
    */
   inline void ZeroOut() {
-    memset(data, 0x00, key_size_byte);
+    memset(key_data, 0x00, key_size_byte);
     
     return;
   }
@@ -1192,7 +1192,7 @@ class IntsKey {
     auto big_endian = ToBigEndian(sign_flipped);
     
     // This will almost always be optimized into single move
-    memcpy(data + offset, &big_endian, sizeof(IntType));
+    memcpy(key_data + offset, &big_endian, sizeof(IntType));
     
     return;
   }
@@ -1210,7 +1210,7 @@ class IntsKey {
     auto big_endian = ToBigEndian(data);
     
     // This will almost always be optimized into single move
-    memcpy(data + offset, &big_endian, sizeof(IntType));
+    memcpy(key_data + offset, &big_endian, sizeof(IntType));
     
     return;
   }
@@ -1222,7 +1222,7 @@ class IntsKey {
    */
   template <typename IntType>
   inline IntType GetInteger(size_t offset) {
-    const IntType *ptr = reinterpret_cast<IntType *>(data + offset);
+    const IntType *ptr = reinterpret_cast<IntType *>(key_data + offset);
     
     // This always returns an unsigned number
     auto host_endian = ToHostEndian(*ptr);
@@ -1237,7 +1237,7 @@ class IntsKey {
    */
   template <typename IntType>
   inline IntType GetUnsignedInteger(size_t offset) {
-    const IntType *ptr = reinterpret_cast<IntType *>(data + offset);
+    const IntType *ptr = reinterpret_cast<IntType *>(key_data + offset);
     auto host_endian = ToHostEndian(*ptr);
     return static_cast<IntType>(host_endian);
   }
@@ -1250,7 +1250,7 @@ class IntsKey {
    */
   static inline int Compare(const IntsKey<KeySize> &a, 
                             const IntsKey<KeySize> &b) {
-    return memcmp(a.data, b.data, IntsKey<KeySize>::key_size_byte); 
+    return memcmp(a.key_data, b.key_data, IntsKey<KeySize>::key_size_byte); 
   }
   
   /*

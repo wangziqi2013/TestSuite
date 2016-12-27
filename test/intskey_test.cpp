@@ -24,13 +24,13 @@ void TestIntsKeySetAndGet() {
   size_t c_offset = b_offset + sizeof(b1);
   
   IntsKey<4> k1, k2;
-  k1.AddInteger(a1);
-  k1.AddUnsignedInteger(b1);
-  k1.AddInteger(c1);
+  k1.AddInteger(a1, a_offset);
+  k1.AddUnsignedInteger(b1, b_offset);
+  k1.AddInteger(c1, c_offset);
   
-  k2.AddInteger(a2);
-  k2.AddUnsignedInteger(b2);
-  k2.AddInteger(c2);
+  k2.AddInteger(a2, a_offset);
+  k2.AddUnsignedInteger(b2, b_offset);
+  k2.AddInteger(c2, c_offset);
   
   assert(k1.GetInteger<decltype(a1)>(a_offset) == a1);
   assert(k1.GetUnsignedInteger<decltype(b1)>(b_offset) == b1);
