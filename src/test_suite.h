@@ -1231,6 +1231,18 @@ class IntsKey {
   }
   
   /*
+   * GetUnsignedInteger() - Extracts an unsigned integer from the given offset
+   *
+   * The same constraint about IntType applies
+   */
+  template <typename IntType>
+  inline IntType GetUnsignedInteger(int offset) {
+    const IntType *ptr = reinterpret_cast<IntType *>(data + offset);
+    auto host_endian = ToHostEndian(*ptr);
+    return static_cast<IntType>(host_endian);
+  }
+  
+  /*
    * Compare() - Compares two IntsType object of the same length
    *
    * This function has the same semantics as memcmp(). Negative result means 
