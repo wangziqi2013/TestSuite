@@ -1184,7 +1184,7 @@ class IntsKey {
    * Otherwise the result is undefined
    */
   template <typename IntType>
-  inline void AddInteger(IntType data, int offset) {
+  inline void AddInteger(IntType data, size_t offset) {
     IntType sign_flipped = SignFlip<IntType>(data);
     
     // This function always returns the unsigned type
@@ -1204,7 +1204,7 @@ class IntsKey {
    *   uint8_t; uint16_t; uint32_t; uint64_t
    */
   template <typename IntType>
-  inline void AddUnsignedInteger(IntType data, int offset) {
+  inline void AddUnsignedInteger(IntType data, size_t offset) {
     // This function always returns the unsigned type
     // so we must use automatic type inference
     auto big_endian = ToBigEndian(data);
@@ -1221,7 +1221,7 @@ class IntsKey {
    * This function has the same limitation as stated for AddInteger()
    */
   template <typename IntType>
-  inline IntType GetInteger(int offset) {
+  inline IntType GetInteger(size_t offset) {
     const IntType *ptr = reinterpret_cast<IntType *>(data + offset);
     
     // This always returns an unsigned number
@@ -1236,7 +1236,7 @@ class IntsKey {
    * The same constraint about IntType applies
    */
   template <typename IntType>
-  inline IntType GetUnsignedInteger(int offset) {
+  inline IntType GetUnsignedInteger(size_t offset) {
     const IntType *ptr = reinterpret_cast<IntType *>(data + offset);
     auto host_endian = ToHostEndian(*ptr);
     return static_cast<IntType>(host_endian);
