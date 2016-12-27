@@ -16,7 +16,7 @@ void TestIntsKeySetAndGet() {
   long c1 = -85412;
   
   int a2 = -1;
-  unsigned char b2 = 255;
+  unsigned char b2 = 254;
   long c2 = 1;
   
   size_t a_offset = 0;
@@ -39,7 +39,10 @@ void TestIntsKeySetAndGet() {
   assert(k2.GetInteger<decltype(a2)>(a_offset) == a2);
   assert(k2.GetUnsignedInteger<decltype(b2)>(b_offset) == b2);
   assert(k2.GetInteger<decltype(c2)>(c_offset) == c2);
-  
+
+  k1.PrintRawData();
+  k2.PrintRawData();
+
   return;
 }
 

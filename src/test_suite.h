@@ -1003,7 +1003,7 @@ template <size_t KeySize>
 class IntsKey {
  private:
   // This is the actual byte size of the key
-  static constexpr size_t key_size_byte = KeySize * 64UL;
+  static constexpr size_t key_size_byte = KeySize * 8UL;
   
   // This is the array we use for storing integers
   unsigned char key_data[key_size_byte];
@@ -1151,7 +1151,10 @@ class IntsKey {
   template <typename IntType>
   inline static IntType SignFlip(IntType data) {
     // This sets 1 on the MSB of the corresponding type
-    IntType mask = 0x1 << (sizeof(IntType) * 8 - 1);
+    // NOTE: Must cast 0x1 to the correct type first
+    // otherwise, 0x1 is treated as the signed int type, and after leftshifting
+    // if it is extended to larger type then sign extension will be used
+    IntType mask = static_cast<IntType>(0x1) << (sizeof(IntType) * 8UL - 1);
     
     return data ^ mask;
   }
@@ -1267,6 +1270,45 @@ class IntsKey {
   static inline bool Equals(const IntsKey<KeySize> &a, 
                             const IntsKey<KeySize> &b) {
     return Compare(a, b) == 0;
+  }
+  
+ public:
+  
+  /*
+   * PrintRawData() - Prints the content of this key
+   *
+   * All contents are printed to stderr
+   */
+  void PrintRawData() {
+    // This is the current offset we are on printing the key
+    int offset = 0;
+    
+    fprintf(stderr, "IntsKey<%lu> - %lu bytes\n", KeySize, key_size_byte);
+    
+    while(offset < key_size_byte) {
+      constexpr int byte_per_line = 16;
+      
+      fprintf(stderr, "0x%.8X    ", offset);
+      
+      for(int i = 0;i < byte_per_line;i++) {
+        if(offset >= key_size_byte) {
+          break;
+        } 
+        
+        fprintf(stderr, "%.2X ", key_data[offset]);
+        
+        // Add a delimiter on the 8th byte
+        if(i == 7) {
+          fprintf(stderr, "   "); 
+        }
+        
+        offset++; 
+      }
+      
+      fprintf(stderr, "\n");
+    }
+    
+    return;
   }
 };
 
