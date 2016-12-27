@@ -1074,32 +1074,68 @@ class IntsKey {
     return data;
   }
   
-  inline static int8_t ToBigEndian(int8_t data) {
-    return data;
+  inline static uint8_t ToBigEndian(int8_t data) {
+    return static_cast<uint8_t>(data);
   }
   
   inline static uint16_t ToBigEndian(uint16_t data) {
     return TwoBytesToBigEndian(data);
   }
   
-  inline static int16_t ToBigEndian(int16_t data) {
-    return TwoBytesToBigEndian(data);
+  inline static uint16_t ToBigEndian(int16_t data) {
+    return TwoBytesToBigEndian(static_cast<uint16_t>(data));
   }
   
   inline static uint32_t ToBigEndian(uint32_t data) {
     return FourBytesToBigEndian(data);
   }
   
-  inline static int32_t ToBigEndian(int32_t data) {
-    return FourBytesToBigEndian(data);
+  inline static uint32_t ToBigEndian(int32_t data) {
+    return FourBytesToBigEndian(static_cast<uint32_t>(data));
   }
   
   inline static uint64_t ToBigEndian(uint64_t data) {
     return EightBytesToBigEndian(data);
   }
   
-  inline static int64_t ToBigEndian(int64_t data) {
-    return EightBytesToBigEndian(data);
+  inline static uint64_t ToBigEndian(int64_t data) {
+    return EightBytesToBigEndian(static_cast<uint64_t>(data));
+  }
+  
+  /*
+   * ToHost() - Converts big endian data to host format
+   */
+  
+  static inline uint8_t ToHostEndian(uint8_t data) {
+    return data; 
+  }
+  
+  static inline uint8_t ToHostEndian(int8_t data) {
+    return static_cast<uint8_t>(data); 
+  }
+  
+  static inline uint16_t ToHostEndian(uint16_t data) {
+    return TwoBytesToHost(data);
+  }
+  
+  static inline uint16_t ToHostEndian(int16_t data) {
+    return TwoBytesToHost(static_cast<uint16_t>(data));
+  }
+  
+  static inline uint32_t ToHostEndian(uint32_t data) {
+    return FourBytesToHost(data);
+  }
+  
+  static inline uint32_t ToHostEndian(int32_t data) {
+    return FourBytesToHost(static_cast<uint32_t>(data));
+  }
+  
+  static inline uint64_t ToHostEndian(uint64_t data) {
+    return EightBytesToHost(data);
+  }
+  
+  static inline uint64_t ToHostEndian(int64_t data) {
+    return EightBytesToHost(static_cast<uint64_t>(data));
   }
   
   /*
@@ -1150,7 +1186,10 @@ class IntsKey {
   template <typename IntType>
   inline void AddInteger(IntType data, int offset) {
     IntType sign_flipped = SignFlip<IntType>(data);
-    IntType big_endian = ToBigEndian(data);
+    
+    // This function always returns the unsigned type
+    // so we must use automatic type inference
+    auto big_endian = ToBigEndian(data);
     
     // This will almost always be optimized into single move
     memcpy(data + offset, &big_endian, sizeof(IntType));
@@ -1165,7 +1204,8 @@ class IntsKey {
    */
   template <typename IntType>
   inline IntType GetInteger(int offset) {
-    
+    const IntType *ptr = reinterpret_cast<IntType *>(data + offset);
+    auto host_endian = ToHostEndian()
   }
 };
 
