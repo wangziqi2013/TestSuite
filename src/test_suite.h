@@ -1180,13 +1180,31 @@ class IntsKey {
    * AddInteger() - Adds a new integer into the compact form
    *
    * Note that IntType must be of the following 8 types:
-   *   int8_t; uint8_t; int16_t; uint16_t; int32_t; uint32_t; int64_t; uint64_t
+   *   int8_t; int16_t; int32_t; int64_t
    * Otherwise the result is undefined
    */
   template <typename IntType>
   inline void AddInteger(IntType data, int offset) {
     IntType sign_flipped = SignFlip<IntType>(data);
     
+    // This function always returns the unsigned type
+    // so we must use automatic type inference
+    auto big_endian = ToBigEndian(sign_flipped);
+    
+    // This will almost always be optimized into single move
+    memcpy(data + offset, &big_endian, sizeof(IntType));
+    
+    return;
+  }
+  
+  /*
+   * AddUnsignedInteger() - Adds an unsigned integer of a certain type
+   *
+   * Only the following unsigned type should be used:
+   *   uint8_t; uint16_t; uint32_t; uint64_t
+   */
+  template <typename IntType>
+  inline void AddUnsignedInteger(IntType data, int offset) {
     // This function always returns the unsigned type
     // so we must use automatic type inference
     auto big_endian = ToBigEndian(data);
