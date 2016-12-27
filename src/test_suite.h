@@ -1214,10 +1214,29 @@ class IntsKey {
   
   /*
    * Compare() - Compares two IntsType object of the same length
+   *
+   * This function has the same semantics as memcmp(). Negative result means 
+   * less than, positive result means greater than, and 0 means equal
    */
   static inline int Compare(const IntsKey<KeySize> &a, 
                             const IntsKey<KeySize> &b) {
     return memcmp(a.data, b.data, key_size_byte); 
+  }
+  
+  /*
+   * LessThan() - Returns true if first is less than the second
+   */
+  static inline bool LessThan(const IntsKey<KeySize> &a, 
+                              const IntsKey<KeySize> &b) {
+    return Compare(a, b) < 0;
+  }
+  
+  /*
+   * Equals() - Returns true if first is equivalent to the second
+   */
+  static inline bool Equals(const IntsKey<KeySize> &a, 
+                            const IntsKey<KeySize> &b) {
+    return Compare(a, b) == 0;
   }
 };
 
