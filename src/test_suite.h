@@ -667,7 +667,8 @@ class Zipfian {
     assert(false);
     return 0UL;
   }
-   
+  
+  
 };
 
 
@@ -1281,14 +1282,14 @@ class IntsKey {
    */
   void PrintRawData() {
     // This is the current offset we are on printing the key
-    int offset = 0;
+    uint64_t offset = 0;
     
     fprintf(stderr, "IntsKey<%lu> - %lu bytes\n", KeySize, key_size_byte);
     
     while(offset < key_size_byte) {
       constexpr int byte_per_line = 16;
       
-      fprintf(stderr, "0x%.8X    ", offset);
+      fprintf(stderr, "0x%08lX    ", offset);
       
       for(int i = 0;i < byte_per_line;i++) {
         if(offset >= key_size_byte) {
