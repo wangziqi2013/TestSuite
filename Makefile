@@ -8,6 +8,7 @@ BIN=$(patsubst ./test/%.cpp,%,$(TEST))
 all: $(BIN)
 	./arg_test-bin
 	key1=value1 key2=2 key3=asdf ./envp_test-bin
+	./intskey_test-bin
 
 %: ./test/%.cpp ./src/test_suite.cpp
 	$(CXX) -g -Wall -Werror -std=c++11 -pthread -o ./bin/$@ $^
