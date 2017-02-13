@@ -686,7 +686,7 @@ class Zipfian {
     for(size_t i = 0;i < count;i++) {
       // Use this pointer to emphasize we are calling the member function
       // because the name seems a little bit missleading
-      data_p[i] = this->Get();
+      (*data_p)[i] = this->Get();
     }
     
     return;
