@@ -27,6 +27,22 @@ void TestZipfianTheta(double theta) {
   return;
 }
 
+/*
+ * DrawZipfianDistribution() - Draw a diagram on the distribution
+ *
+ * This function generates a workload first, and then output a distribution file
+ * and draws a diagram using gnuplot
+ */
+void DrawZipfianDistribution(double theta) {
+  // This is the name of the output file
+  //static constexpr const char *file_name = "_zipfian_dist.txt";
+  _PrintTestName();
+  
+  
+  
+  return;
+}
+
 int main() {
   TestZipfianTheta(0.0);
   TestZipfianTheta(50.0);

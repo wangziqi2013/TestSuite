@@ -668,7 +668,29 @@ class Zipfian {
     return 0UL;
   }
   
-  
+  /*
+   * Fill() - Fills a vector with Zpifian keys
+   *
+   * The number of keys filled depends on the second argument. For efficiency
+   * issues we first reserve that much space in the vector. 
+   *
+   * All old data in the vector will be cleared.
+   */
+  void Fill(std::vector<uint64_t> *data_p, size_t count) {
+    // First clear all data
+    data_p->clear();
+    
+    // After clearing the vector we adjust its size to fit the final state
+    data_p->resize(count);
+    
+    for(size_t i = 0;i < count;i++) {
+      // Use this pointer to emphasize we are calling the member function
+      // because the name seems a little bit missleading
+      data_p[i] = this->Get();
+    }
+    
+    return;
+  }
 };
 
 
