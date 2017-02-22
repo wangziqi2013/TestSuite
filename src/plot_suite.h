@@ -304,7 +304,7 @@ class BarChart {
   BarChart(const std::string &p_chart_title) :
     group_list{},
     chart_title{p_chart_title},
-    color_scheme_p{nullptr},
+    color_scheme_p{RED_COLOR_SCHEME},
     legend_title_list{},
     // Use the default parameters inside the constructor
     // if we need to modify this then just modify it later
