@@ -42,6 +42,58 @@ class Color {
     zero{0}
   {}
   
+  // RRGGBB is of length 6 
+  constexpr size_t RGB_STRING_LENGTH = 6;
+  
+  /*
+   * Constructor - Use a string to initialize
+   *
+   * We assume the string is always of format #RRGGBB and reject all other
+   * formats by thowing an error
+   */
+  Color(const char *s) throw(const char *) {
+    assert(s != nullptr);
+    
+    // #RRGGBB must be of length 7
+    if(strlen(s) != (RGB_STRING_LENGTH + 1)) {
+      assert(false);
+      throw "Invalid color format: Incorrect length";
+    }
+    
+    // The string must begin with '#' 
+    if(*s != '#') {
+      assert(false);
+      throw "Invalid color format: Expecting '#'";
+    } else {
+      s++; 
+    }
+    
+    // We use this to hold value converted from 6 hex digits
+    uint8_t hex_value[RGB_STRING_LENGTH]
+    for(int i = 0;i < RGB_STRING_LENGTH;i++) { 
+      char ch = s[i];
+      
+      if(ch >= '0' && ch <= '9') {
+        hex_value[i] = static_cast<uint8_t>(ch) - static_cast<uint8_t>('0'); 
+      } else if(ch >= 'a' && ch <= 'f') {
+        hex_value[i] = static_cast<uint8_t>(ch) - static_cast<uint8_t>('a');  
+      } else if(ch >= 'A' && ch <= 'F') {
+        hex_value[i] = static_cast<uint8_t>(ch) - static_cast<uint8_t>('A');  
+      } else {
+        assert(false);
+        throw "Invalid color format: Unknown character"; 
+      }
+    }
+    
+    // Then ser RGB fields
+    r = hex_value[0] << 4 + hex_value[1];
+    g = hex_value[2] << 4 + hex_value[3];
+    b = hex_value[4] << 4 + hex_value[5];
+    zero = 0;
+    
+    return;
+  }
+  
   /*
    * AppendToBuffer() - Appends the value of the color to the buffer
    *
@@ -59,6 +111,14 @@ class Color {
     return;
   }
 };
+
+// These are predefined color schemes
+// These schemes only have a limited set of colors, so if the 
+// scale of the plot is too large then the user should provide 
+// a customized one
+
+extern Color RED_COLOR_SCHEME[];
+extern Color BLUE_COLOR_SCHEME[];
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
