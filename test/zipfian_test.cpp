@@ -48,7 +48,7 @@ void DrawZipfianDistribution(double theta,
     "set output \"zipfian_dist.png\"\n"
     "set boxwidth 0.5\n"
     "set style fill solid\n"
-    "plot \"_zipfian_dist.txt\" using 1:3:xtic(2) with boxes\n";
+    "plot \"_zipfian_dist.txt\" using 1:2 with boxes\n";
                                                                                         
   _PrintTestName();
   
@@ -89,20 +89,23 @@ void DrawZipfianDistribution(double theta,
   
   dbg_printf("Writing distribution file %s...\n", data_file_name);
   
-  uint64_t i = 0;
+  uint64_t i = 0UL;
+  uint64_t total = 0UL;
   // Then loop over all counters to print them out
   // The format is:
   // [index of bar] [bar title] [actual number]
   for(uint64_t counter : counter_list) {
     fprintf(fp, 
-            "%lu \"%lu-%lu\" %lu\n", 
+            "%lu %lu\n", 
             i, 
-            i * interval_size, 
-            (i + 1) * interval_size - 1,
             counter);
-    
+            
+    total += counter;
     i++;
   }
+  
+  // Total number of points must be also the data size
+  assert(total == data_size);
   
   int ret = fclose(fp);
   assert(ret == 0);
@@ -144,6 +147,7 @@ int main() {
   
   // 10 M data points within 50 M range
   // each interval is 50K in the bar chart
+  // So there are 1K bars in the chart
   DrawZipfianDistribution(0.99, 
                           10 * 1024 * 1024, 
                           50 * 1024 * 1024, 
