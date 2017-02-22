@@ -60,6 +60,10 @@ class Color {
   }
 };
 
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
 /*
  * class BarGroup - This class represents a group in the graph
  */
@@ -134,6 +138,74 @@ class BarGroup {
 /////////////////////////////////////////////////////////////////////
 
 /*
+ * class ChartParameter - This class stores the metadata that is applicable
+ *                        in general to many kinds of plots
+ *
+ * This class should be kept as a POD type, such that a simple memcpy() could
+ * duplicate its content
+ */
+class ChartParameter {
+ public:
+  // Total size of thje plot (in inches)
+  uint32_t width;
+  uint32_t height;
+  
+  // The font size of ticks (i.e. interval markers) on both axes
+  uint32_t x_tick_font_size;
+  uint32_t y_tick_font_size;
+  
+  // The font size of titles on both axes
+  uint32_t x_font_size;
+  uint32_t y_font_size;
+  
+  // This is the position of the legend; expressed in the format that
+  // matplotlib could recognize (i.e. we do not use C++ constants for 
+  // this field)
+  std::string legend_position;
+  
+  /*
+   * Constructor
+   */
+  ChartPatameter(uint32_t p_width, 
+                 uint32_t p_height,
+                 uint32_t p_x_tick_font_size,
+                 uint32_t p_y_tick_font_size,
+                 uint32_t p_x_font_size,
+                 uint32_t p_y_font_size,
+                 const std::string &p_legend_position) :
+    width{p_width},
+    height{p_width},
+    x_tick_font_size{p_x_tick_font_size},
+    y_tick_font_size{p_y_tick_font_size},
+    x_font_size{p_x_font_size},
+    y_font_size{p_y_font_size},
+    legend_position{p_legend_position}
+  {}
+  
+  /*
+   * Copy Constructor
+   */
+  ChartParameter(const ChartParameter &other) :
+    width{other.width},
+    height{other.width},
+    x_tick_font_size{other.x_tick_font_size},
+    y_tick_font_size{other.y_tick_font_size},
+    x_font_size{other.x_font_size},
+    y_font_size{other.y_font_size},
+    legend_position{other.legend_position}
+  {}
+};
+
+// This is the default parameter for charts
+// We could customize one by ourselves but this should be sufficient for
+// most charts
+extern ChartParameter default_chart_param;
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+/*
  * class BarChart - Represents a bar chart, including its data and metadata
  *                  such as graph title,  
  */
@@ -149,7 +221,45 @@ class BarChart {
   // The title of the bar chart. If its length is 0 we do not draw anything 
   std::string chart_title;
   
+  // This is a pointer to the color scheme, which could be predefined
+  // or customized
+  Color *color_scheme_p;
   
+  // This corresponds with the color - the color on index i
+  // has a legend title on this list at position i
+  std::vector<std::string> legend_title_list;
+  
+  // The following are parameters that could be tweaked but usually kept
+  // as-is
+  ChartParameter param;
+  
+  // The following two are X and Y labels
+  // By default they are not set, and also will not be printed
+  std::string x_label;
+  std::string y_label;
+  
+  /*
+   * Constructor
+   */
+  BarChart(const std::string &p_chart_title) :
+    group_list{},
+    chart_title{p_chart_title},
+    color_scheme_p{nullptr},
+    legend_title_list{},
+    // Use the default parameters inside the constructor
+    // if we need to modify this then just modify it later
+    param{default_chart_param},
+    // By default should be empty
+    x_label{},
+    y_label{}
+  {}
+  
+  /*
+   * Constructor - Anonymous graph which does not have a title
+   */
+  BarChart() :
+    BarChart{""}
+  {}
 };
 
 #endif
