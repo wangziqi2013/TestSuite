@@ -4,7 +4,7 @@
  *                variables
  */
  
-#include "../src/test_suite.h"
+#include "test_suite.h"
 
 /*
  * TestEnvpBasic() - Tests basic envp functionality

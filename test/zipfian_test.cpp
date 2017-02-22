@@ -7,7 +7,7 @@
  *   https://github.com/efficient/msls-eval/blob/master/util.h
  */
 
-#include "../src/test_suite.h"
+#include "test_suite.h"
 #include <unistd.h>
 
 /*

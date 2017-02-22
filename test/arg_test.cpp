@@ -5,7 +5,7 @@
  *                user in other projects
  */
  
-#include "../src/test_suite.h"
+#include "test_suite.h"
  
 /*
  * TestArgBasic() - Tests basic functionality 

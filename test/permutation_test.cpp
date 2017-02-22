@@ -3,7 +3,7 @@
  * PermutationTest() - Tests whether permutation works as expected
  */
 
-#include "../src/test_suite.h"
+#include "test_suite.h"
 
 /*
  * TestSimplePermutation() - Tests whether permutation works

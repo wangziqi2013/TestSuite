@@ -3,7 +3,7 @@
  * intskey_test.cpp - Unit test for IntsKey module
  */
  
-#include "../src/test_suite.h"
+#include "ints_key.h"
 
 /*
  * TestIntsKeySetAndGet() - Tests 
