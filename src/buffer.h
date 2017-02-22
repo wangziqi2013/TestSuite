@@ -4,6 +4,9 @@
 #ifndef _BUFFER_H
 #define _BUFFER_H
 
+#include "common.h"
+#include <cstdarg>
+
 /*
  * class Buffer - In memory buffer for holding data for buffering them to be
  *                written into file 
@@ -15,20 +18,12 @@ class Buffer {
   
   size_t current_length;
   
-#ifndef BUFFER_TEST_MODE
-  // Use 64K as default buffer size if none is given
-  static constexpr size_t DEFAULT_SIZE = 0x1UL << 16;
-  // 1 KB for stack buffer. Anything longer than this will be 
-  // allocated on the heap and then combined into existing data
-  static constexpr size_t STACK_BUFFER_SIZE = 0x1UL << 10;
-#else
   // Under debug mode make is as small as possible to test whether 
   // bufer expansion works
   static constexpr size_t DEFAULT_SIZE = 4UL;
   // For buffer test we want to cover all branches so make it smaller 
   // such that we have a change to test stack and heap allocation
   static constexpr size_t STACK_BUFFER_SIZE = 4UL;
-#endif
   
   /*
    * Expand() - Adjust the size of the buffer for holding more data
@@ -36,16 +31,10 @@ class Buffer {
    * Do not use this to shrink the buffer
    */
   void Expand(size_t resize_length) {
-#ifdef BUFFER_TEST_MODE
-    dbg_printf("Expand() called: from %lu to %lu\n", length, resize_length);
-#endif
-    
     assert(resize_length > length);
     
     unsigned char *temp = new unsigned char[resize_length];
-    if(temp == nullptr) {
-      ReportError(OUT_OF_MEMORY);
-    }
+    assert(temp != nullptr);
     
     memcpy(temp, data_p, current_length);
     delete[] data_p;
@@ -269,16 +258,12 @@ class Buffer {
     assert(fp != nullptr);
     
     size_t ret = fwrite(data_p, 1, current_length, fp);
-    if(ret != current_length) {
-      ReportError(ERROR_WRITE_FILE); 
-    }
+    assert(ret == current_length);
     
     if(do_flush == true) {
       // Make sure we could see the content immediately
       ret = fflush(fp);
-      if(ret != 0) {
-        ReportError(ERROR_FLUSH_FILE, "(unknown)"); 
-      }
+      assert(ret == 0);
     }
     
     return;
@@ -309,9 +294,7 @@ class Buffer {
     // Need do heap allocation to hold data and then combine
     if(expected_length > STACK_BUFFER_SIZE) {
       char *heap_buffer = new char[expected_length];
-      if(heap_buffer == nullptr) {
-        ReportError(OUT_OF_MEMORY); 
-      }
+      assert(heap_buffer != nullptr);
       
       // Must use a new set of states since the old one has been traversed
       va_list args_2;
@@ -350,9 +333,7 @@ class Buffer {
     
     // Need to flush here to make sure '\n' reaches the file
     int ret = fflush(fp);
-    if(ret != 0) {
-      ReportError(ERROR_FLUSH_FILE); 
-    }
+    assert(ret == 0);
     
     Reset();
     
