@@ -33,7 +33,13 @@ ChartParameter default_chart_param{
   // X tick font size
   16,  
   // y tick font size
-  14,  
+  14,
+  // x title font size  
+  20,
+  // y title font size
+  20,
+  // Legend font size
+  12,
   // Legend position
   "upper left"
 };

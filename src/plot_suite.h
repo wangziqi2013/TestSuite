@@ -43,7 +43,7 @@ class Color {
   {}
   
   // RRGGBB is of length 6 
-  constexpr size_t RGB_STRING_LENGTH = 6;
+  static constexpr size_t RGB_STRING_LENGTH = 6;
   
   /*
    * Constructor - Use a string to initialize
@@ -69,8 +69,8 @@ class Color {
     }
     
     // We use this to hold value converted from 6 hex digits
-    uint8_t hex_value[RGB_STRING_LENGTH]
-    for(int i = 0;i < RGB_STRING_LENGTH;i++) { 
+    uint8_t hex_value[RGB_STRING_LENGTH];
+    for(size_t i = 0;i < RGB_STRING_LENGTH;i++) { 
       char ch = s[i];
       
       if(ch >= '0' && ch <= '9') {
@@ -86,9 +86,9 @@ class Color {
     }
     
     // Then ser RGB fields
-    r = hex_value[0] << 4 + hex_value[1];
-    g = hex_value[2] << 4 + hex_value[3];
-    b = hex_value[4] << 4 + hex_value[5];
+    r = (hex_value[0] << 4) + hex_value[1];
+    g = (hex_value[2] << 4) + hex_value[3];
+    b = (hex_value[4] << 4) + hex_value[5];
     zero = 0;
     
     return;
@@ -218,6 +218,9 @@ class ChartParameter {
   uint32_t x_font_size;
   uint32_t y_font_size;
   
+  // Legend font size
+  uint32_t legend_font_size;
+  
   // This is the position of the legend; expressed in the format that
   // matplotlib could recognize (i.e. we do not use C++ constants for 
   // this field)
@@ -226,12 +229,13 @@ class ChartParameter {
   /*
    * Constructor
    */
-  ChartPatameter(uint32_t p_width, 
+  ChartParameter(uint32_t p_width, 
                  uint32_t p_height,
                  uint32_t p_x_tick_font_size,
                  uint32_t p_y_tick_font_size,
                  uint32_t p_x_font_size,
                  uint32_t p_y_font_size,
+                 uint32_t p_legend_font_size,
                  const std::string &p_legend_position) :
     width{p_width},
     height{p_width},
@@ -239,6 +243,7 @@ class ChartParameter {
     y_tick_font_size{p_y_tick_font_size},
     x_font_size{p_x_font_size},
     y_font_size{p_y_font_size},
+    legend_font_size{p_legend_font_size},
     legend_position{p_legend_position}
   {}
   
@@ -252,6 +257,7 @@ class ChartParameter {
     y_tick_font_size{other.y_tick_font_size},
     x_font_size{other.x_font_size},
     y_font_size{other.y_font_size},
+    legend_font_size{other.legend_font_size},
     legend_position{other.legend_position}
   {}
 };
