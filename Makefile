@@ -11,7 +11,7 @@ all: $(BIN)
 	./intskey_test-bin
 
 %: ./test/%.cpp ./src/test_suite.cpp
-	$(CXX) -g -Wall -Werror -std=c++11 -pthread -o ./bin/$@ $^
+	$(CXX) -g -Wall -Werror -I./src/ -std=c++11 -pthread -o ./bin/$@ $^
 	ln -sf ./bin/$@ ./$@-bin
 
 prepare:

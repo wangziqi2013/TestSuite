@@ -5,6 +5,7 @@
 #define _INTT_KEY_H
 
 #include <endian.h>
+#include "test_suite.h"
 
 /*
  * class IntsKey - Compact representation of integers of different length
