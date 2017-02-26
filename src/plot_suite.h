@@ -130,7 +130,7 @@ extern Color BLUE_COLOR_SCHEME[];
 class BarGroup {
  private:
   // The title of the group. This will be drawn on the 
-  // x axis
+  // x axis. Its font size of x_tick_font_size
   std::string title; 
    
   // The list of data the bar chart will be showing
@@ -204,6 +204,13 @@ class BarGroup {
     data_list.clear();
     
     return;
+  }
+  
+  /*
+   * GetSize() - Returns the size of the bar group's data vector 
+   */
+  inline size_t GetSize() const {
+    return data_list.size(); 
   }
 };
 
@@ -318,6 +325,9 @@ class BarChart {
   std::string x_label;
   std::string y_label;
   
+  // This is the buffer in which we print the pythob script into
+  Buffer buffer;
+  
   /*
    * Constructor
    */
@@ -331,7 +341,8 @@ class BarChart {
     param{default_chart_param},
     // By default should be empty
     x_label{},
-    y_label{}
+    y_label{},
+    buffer{}
   {}
   
   /*
@@ -340,6 +351,26 @@ class BarChart {
   BarChart() :
     BarChart{""}
   {}
+  
+  /*
+   * Destructor
+   */
+  ~BarChart() {}
+  
+  /*
+   * GetMaximumGroupSize() - Returns the maximum group size
+   *
+   * Since we do not restrict the size of each bar group, they could be
+   * of different size. In order to uniformly draw the graph we need to 
+   * calculate the maximum size of the bar group to determine the width
+   * of each bargroup
+   */
+  size_t GetMaximumGroupSize() {
+    // Loop over each bar group and get its size 
+    for(const BarGroup &bg : group_list) {
+      
+    }
+  }
 };
 
 #endif
