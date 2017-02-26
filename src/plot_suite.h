@@ -129,7 +129,7 @@ extern Color BLUE_COLOR_SCHEME[];
  */
 class BarGroup {
  private:
-  // The title of the group. This will be drawn on the 
+  // The x tick of the group. This will be drawn on the 
   // x axis. Its font size of x_tick_font_size
   std::string title; 
    
@@ -436,6 +436,59 @@ class BarChart {
    * Destructor
    */
   ~BarChart() {} 
+  
+  /*
+   * AppendBarGroup() - Appends a new bar group into the chart
+   *
+   * This function will add a new bar group instance and append it after all
+   * existing bar groups
+   */
+  template <typename T> 
+  void AppendBarGroup(const std::string &x_tick, 
+                      size_t data_count,
+                      T *data_p) {
+    // Construct a bg object at the back of the current bg list
+    group_list.emplace_back(x_tick);
+    
+    // This is a pointer to the bar group we just added on the back
+    BarGroup *bg_p = &group_list.back();
+    
+    // Copy data points into the bar group
+    bg_p->Append(data_count, data_p);
+    
+    return;
+  }
+  
+  /*
+   * AppendBarGroup() - Appends a vector
+   */
+  template <typename T>
+  inline void AppendBarGroup(const std::string &x_tick, 
+                             const std::vector<T> &v) {
+    // Just call the overloaded version
+    AppendBarGroup<T>(x_tick, v.size(), &v[0]);
+    
+    return;
+  }
+  
+  /*
+   * AppendBarGroup() - Appends an empty bar group
+   */
+  inline void AppendBarGroup(const std::string &x_tick) {
+    // Construct a bg object at the back of the current bg list
+    group_list.emplace_back(x_tick);
+    
+    return;
+  }
+  
+  /*
+   * AppendBarGroup() - Takes an existing bar group and append it
+   */
+  inline void AppendBarGroup(const BarGroup &bg) {
+    group_list.push_back(bg);
+    
+    return;
+  }
 };
 
 #endif
