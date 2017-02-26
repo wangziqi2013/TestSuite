@@ -364,12 +364,31 @@ class BarChart {
    * of different size. In order to uniformly draw the graph we need to 
    * calculate the maximum size of the bar group to determine the width
    * of each bargroup
+   *
+   * If there is not yet any bar group this function returns -1UL 
    */
   size_t GetMaximumGroupSize() {
+    // Corner case 
+    if(group_list.size() = 0UL) {
+      dbg_printf("Bar group is empty while calculating the"
+                 " maximum group size\n"); 
+      
+      return -1UL; 
+    } 
+    
+    // The max is set to the first here, and we update it later 
+    size_t max_size = group_list[0].GetSize(); 
+    
     // Loop over each bar group and get its size 
     for(const BarGroup &bg : group_list) {
+      size_t current_size = bg.GetSize();
       
+      if(current_size > max_size) {
+        max_size = current_size; 
+      }  
     }
+    
+    return max_size; 
   }
 };
 
