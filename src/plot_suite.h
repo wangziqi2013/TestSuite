@@ -365,12 +365,15 @@ class BarChart {
    *   (2) The width of each bar is (Total width / (s + 2)) 
    * The essence of this process is that we need to add two padding "bars"
    * at the left and right of the diagram 
+   *
+   * This function always returns a positive number, even in the corner case
+   * that the number of bar group is 0 
    */ 
   double GetBarWidth() const {
     // Start with 2 as the left and right padding 
     size_t bar_count = 2UL;
     for(const BarGroup &bg : group_list) {
-      bar_count += bg.data_list.size(); 
+      bar_count += bg.GetSize(); 
     } 
     
     // Then divide width by the bar count 
@@ -389,7 +392,7 @@ class BarChart {
    */
   size_t GetMaximumGroupSize() const {
     // Corner case 
-    if(group_list.size() = 0UL) {
+    if(group_list.size() == 0UL) {
       dbg_printf("Bar group is empty while calculating the"
                  " maximum group size\n"); 
       
