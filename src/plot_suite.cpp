@@ -27,9 +27,9 @@ Color BLUE_COLOR_SCHEME[] = {
 
 ChartParameter default_chart_param{
   // Width 
-  8,   
+  8.0L,   
   // Height
-  5,   
+  5.0L,   
   // X tick font size
   16,  
   // y tick font size

@@ -228,8 +228,8 @@ class BarGroup {
 class ChartParameter {
  public:
   // Total size of thje plot (in inches)
-  uint32_t width;
-  uint32_t height;
+  double width;
+  double height;
   
   // The font size of ticks (i.e. interval markers) on both axes
   uint32_t x_tick_font_size;
@@ -250,8 +250,8 @@ class ChartParameter {
   /*
    * Constructor
    */
-  ChartParameter(uint32_t p_width, 
-                 uint32_t p_height,
+  ChartParameter(double p_width, 
+                 double p_height,
                  uint32_t p_x_tick_font_size,
                  uint32_t p_y_tick_font_size,
                  uint32_t p_x_font_size,
@@ -358,6 +358,26 @@ class BarChart {
   ~BarChart() {}
   
   /*
+   * GetBarWidth() - Returns the width of each bar in the graph
+   *
+   * We compute the width of the bar by the following process:
+   *   (1) Sum the total number of data points in all groups, let it be s 
+   *   (2) The width of each bar is (Total width / (s + 2)) 
+   * The essence of this process is that we need to add two padding "bars"
+   * at the left and right of the diagram 
+   */ 
+  double GetBarWidth() const {
+    // Start with 2 as the left and right padding 
+    size_t bar_count = 2UL;
+    for(const BarGroup &bg : group_list) {
+      bar_count += bg.data_list.size(); 
+    } 
+    
+    // Then divide width by the bar count 
+    return param.width / static_cast<double>(bar_count); 
+  } 
+  
+  /*
    * GetMaximumGroupSize() - Returns the maximum group size
    *
    * Since we do not restrict the size of each bar group, they could be
@@ -367,7 +387,7 @@ class BarChart {
    *
    * If there is not yet any bar group this function returns -1UL 
    */
-  size_t GetMaximumGroupSize() {
+  size_t GetMaximumGroupSize() const {
     // Corner case 
     if(group_list.size() = 0UL) {
       dbg_printf("Bar group is empty while calculating the"
