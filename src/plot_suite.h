@@ -339,6 +339,10 @@ class BarChart {
   // This is the buffer in which we print the pythob script into
   Buffer buffer;
   
+  // This is the width of the bar
+  // It will be set in SetPosition()
+  double bar_width;
+  
   /*
    * GetBarWidth() - Returns the width of each bar in the graph
    *
@@ -371,42 +375,36 @@ class BarChart {
    */ 
   void SetPosition() {
     // This is the basic unit for drawing the diagram
-    double width = GetBarWidth();
-  } 
-  
-  /*
-   * GetMaximumGroupSize() - Returns the maximum group size
-   *
-   * Since we do not restrict the size of each bar group, they could be
-   * of different size. In order to uniformly draw the graph we need to 
-   * calculate the maximum size of the bar group to determine the width
-   * of each bargroup
-   *
-   * If there is not yet any bar group this function returns -1UL 
-   */
-  size_t GetMaximumGroupSize() const {
-    // Corner case 
-    if(group_list.size() == 0UL) {
-      dbg_printf("Bar group is empty while calculating the"
-                 " maximum group size\n"); 
-      
-      return -1UL; 
-    } 
+    const double width = GetBarWidth();
+    // Also assign it to the instance wide bar width for reuse
+    bar_width = width;
     
-    // The max is set to the first here, and we update it later 
-    size_t max_size = group_list[0].GetSize(); 
-    
-    // Loop over each bar group and get its size 
-    for(const BarGroup &bg : group_list) {
-      size_t current_size = bg.GetSize();
+    // This is the current position of the bar group
+    // Note that this position is the left padding
+    double current_pos = 0.0L;
+    for(BarGroup &bg : group_list) {
+      // This is the size of the bar group (i.e. number of data points)
+      size_t bg_size = bg.GetSize();
       
-      if(current_size > max_size) {
-        max_size = current_size; 
-      }  
+      double start_pos = current_pos + width;
+      double end_pos = start_pos + static_cast<double>(bg_size) * width;
+      
+      // The position of the x label is the midpoint of these twp
+      bg.x_tick_pos = (start_pos + end_pos) / 2;
+      
+      // Then prepare space for the position list for each bar
+      bg.pos_list.resize(bg_size, 0.0L);
+      for(size_t i = 0;i < bg_size;i++) {
+        // The position of each bar is 
+        bg.pos_list[i] = (start_pos + width * i); 
+      }
+      
+      // Update the current position for the next group
+      current_pos = end_pos;
     }
     
-    return max_size; 
-  }
+    return;
+  } 
  
  public: 
   /*
@@ -423,7 +421,8 @@ class BarChart {
     // By default should be empty
     x_label{},
     y_label{},
-    buffer{}
+    buffer{},
+    bar_width{}
   {}
   
   /*
