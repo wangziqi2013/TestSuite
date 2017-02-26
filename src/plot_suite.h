@@ -140,20 +140,31 @@ class BarGroup {
   std::vector<double> data_list; 
  public:
   
-  /*
-   * Constructor
-   */
-  BarGroup(const std::string p_title) :
-    title{p_title},
-    data_list{} 
-  {}
+  // The list of positions. This list must be of the same 
+  // length of data list 
+  std::vector<double> pos_list;
   
+  // The position of the X axis tick 
+  // Note that this is the central of the x tick
+  // label as required by matplotlib 
+  double x_tick_pos; 
+   
+ public: 
   /*
    * Constructor
    */
   BarGroup(const char *p_title) :
     title{p_title},
-    data_list{}
+    data_list{}, 
+    pos_list{},
+    x_tick_pos{} 
+  {}
+  
+  /*
+   * Constructor
+   */
+  BarGroup(const std::string p_title) :
+    BarGroup{p_title.c_str()} 
   {}
   
   /*
