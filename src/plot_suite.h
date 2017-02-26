@@ -454,7 +454,7 @@ class BarChart {
     BarGroup *bg_p = &group_list.back();
     
     // Copy data points into the bar group
-    bg_p->Append(data_count, data_p);
+    bg_p->Append<T>(data_count, data_p);
     
     return;
   }
@@ -486,6 +486,28 @@ class BarChart {
    */
   inline void AppendBarGroup(const BarGroup &bg) {
     group_list.push_back(bg);
+    
+    return;
+  }
+  
+  /*
+   * AppendData() - This function appends a data point into the last
+   *                bar group
+   *
+   * If the bar group is empty then raise an exception
+   */
+  template<typename T>
+  inline void AppendData(T data) {
+    // If there is no existing bar group just report error
+    if(group_list.size() == 0UL) {
+      dbg_printf("Trying to append data to an empty group list\n");
+      
+      throw "Could not append data to an empty group list";  
+    }
+    
+    // Get the last element and then append the data
+    BarGroup *bg_p = &group_list.back(); 
+    bg_p->Append<T>(data);
     
     return;
   }
