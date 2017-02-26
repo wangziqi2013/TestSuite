@@ -174,6 +174,20 @@ class BarGroup {
   }
   
   /*
+   * Append() - Append a vector into the current data list
+   *
+   * This function is a wrapper over the array based Append()
+   */
+  template <typename T>
+  inline void Append(const std::vector<T> &v) {
+    // For vector it is guaranteed that all elements are stored in 
+    // a consecutive chunk of memory
+    Append(v.size(), &v[0]);
+    
+    return;
+  }
+  
+  /*
    * Append() - This function appends a single element into the data list
    */
   template <typename T>

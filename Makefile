@@ -16,4 +16,5 @@ all: $(BIN)
 
 prepare:
 	mkdir -p bin
+	mkdir -p build
 	echo $(BIN)
