@@ -340,35 +340,6 @@ class BarChart {
   Buffer buffer;
   
   /*
-   * Constructor
-   */
-  BarChart(const std::string &p_chart_title) :
-    group_list{},
-    chart_title{p_chart_title},
-    color_scheme_p{RED_COLOR_SCHEME},
-    legend_title_list{},
-    // Use the default parameters inside the constructor
-    // if we need to modify this then just modify it later
-    param{default_chart_param},
-    // By default should be empty
-    x_label{},
-    y_label{},
-    buffer{}
-  {}
-  
-  /*
-   * Constructor - Anonymous graph which does not have a title
-   */
-  BarChart() :
-    BarChart{""}
-  {}
-  
-  /*
-   * Destructor
-   */
-  ~BarChart() {}
-  
-  /*
    * GetBarWidth() - Returns the width of each bar in the graph
    *
    * We compute the width of the bar by the following process:
@@ -389,6 +360,18 @@ class BarChart {
     
     // Then divide width by the bar count 
     return param.width / static_cast<double>(bar_count); 
+  } 
+  
+  /*
+   * SetPosition() - Sets the position of all bars and X axis ticks
+   *
+   * We loop through all bar groups and assign them the position of each bar
+   * and also a position of the X tick (which is the position of its central
+   * point)
+   */ 
+  void SetPosition() {
+    // This is the basic unit for drawing the diagram
+    double width = GetBarWidth();
   } 
   
   /*
@@ -424,6 +407,36 @@ class BarChart {
     
     return max_size; 
   }
+ 
+ public: 
+  /*
+   * Constructor
+   */
+  BarChart(const std::string &p_chart_title) :
+    group_list{},
+    chart_title{p_chart_title},
+    color_scheme_p{RED_COLOR_SCHEME},
+    legend_title_list{},
+    // Use the default parameters inside the constructor
+    // if we need to modify this then just modify it later
+    param{default_chart_param},
+    // By default should be empty
+    x_label{},
+    y_label{},
+    buffer{}
+  {}
+  
+  /*
+   * Constructor - Anonymous graph which does not have a title
+   */
+  BarChart() :
+    BarChart{""}
+  {}
+  
+  /*
+   * Destructor
+   */
+  ~BarChart() {} 
 };
 
 #endif
