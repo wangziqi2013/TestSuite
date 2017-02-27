@@ -419,6 +419,9 @@ class BarChart {
     // integer divisio on the number
     num *= 10L;
     size_t temp = static_cast<size_t>(num);
+    
+    // If the number is, say, 15.55, then 155.5 will be converted to
+    // 155, and the result is incorrect
     if(static_cast<double>(temp) < num) {
       temp++; 
     }
@@ -503,6 +506,40 @@ class BarChart {
     
     return;
   } 
+  
+  /*
+   * GetMaximumGroupSize() - Returns the maximum group size
+   *
+   * Since we do not restrict the size of each bar group, they could be
+   * of different size. In order to uniformly draw the graph we need to 
+   * calculate the maximum size of the bar group to determine the width
+   * of each bargroup
+   *
+   * If there is not yet any bar group this function returns -1UL 
+   */
+  size_t GetMaximumGroupSize() {
+    // Corner case 
+    if(group_list.size() = 0UL) {
+      dbg_printf("Bar group is empty while calculating the"
+                 " maximum group size\n"); 
+      
+      return -1UL; 
+    } 
+    
+    // The max is set to the first here, and we update it later 
+    size_t max_size = group_list[0].GetSize(); 
+    
+    // Loop over each bar group and get its size 
+    for(const BarGroup &bg : group_list) {
+      size_t current_size = bg.GetSize();
+      
+      if(current_size > max_size) {
+        max_size = current_size; 
+      }  
+    }
+    
+    return max_size; 
+  }
   
   // import statements
   static constexpr const char *python_import_prologue = \
@@ -645,6 +682,15 @@ class BarChart {
    * Draw() - Draw the dirgram into a given file name
    */
   void Draw(const std::string output_file_name) {
+    PrintPrologue();
+    
+    // This defines the size of the diagram
+    buffer.Printf("fig = plot.figure(figsize={%f, %f})\n", 
+                  param.height, 
+                  param,width);
+    // This obtains the plot object
+    buffer.Append("ax = fig.add_subplot(111)\n\n");
+    
     
   }
 };
