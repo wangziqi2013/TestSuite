@@ -581,6 +581,67 @@ class BarChart {
     
     return;
   }
+  
+  /*
+   * PrintBarPlot() - This is middle part of the plot script that draws
+   *                  bars using data points
+   */
+  void PrintBarPlot() {
+    // This defines the size of the diagram
+    buffer.Printf("fig = plot.figure(figsize={%f, %f})\n", 
+                  param.height, 
+                  param.width);
+    // This obtains the plot object
+    buffer.Append("ax = fig.add_subplot(111)\n\n");
+    
+    // We need to start with the first to the last in each group
+    size_t max_group_size = GetMaximumGroupSize();
+    
+    // We start with the first bar in each group, and then the second, etc.
+    for(size_t i = 0;i < max_group_size;i++) {
+      // Need these two buffer to represent data list and pos list
+      Buffer data_buffer;
+      Buffer pos_buffer;
+      
+      data_buffer.Append('[');
+      pos_buffer.Append('[');
+      
+      // Then for each group check their i-th bar, and if it exists
+      // we add it to the buffer
+      for(const BarGroup &bg : group_list) {
+        if(i < bg.GetSize()) {
+          data_buffer.Printf("%f, ", bg.GetDataList().at(i)); 
+          pos_buffer.Printf("%f, ", bg.pos_list.at(i));
+        }
+      }
+      
+      // Close the two Python lists
+      data_buffer.Append(']');
+      pos_buffer.Append(']');
+      
+      // First of the line calling bar() method
+      buffer.Append("ax.bar(");
+      
+      // Add pos list
+      buffer.Append(pos_buffer);
+      buffer.Append(", ");
+      
+      // Add data list
+      buffer.Append(data_buffer);
+      
+      // And then add width and color
+      buffer.Printf(", %f, color=\"", bar_width);
+      color_scheme_p[i].AppendToBuffer(&buffer);
+      
+      buffer.Printf("\", label=\"");
+      buffer.Append(bar_name_list[i].c_str());
+      buffer.Printf("\")\n");
+    }
+    
+    buffer.Append('\n');
+    
+    return;
+  }
  
  public: 
   /*
@@ -699,59 +760,7 @@ class BarChart {
     y_limit = GetYLimit();
     
     PrintPrologue();
-    
-    // This defines the size of the diagram
-    buffer.Printf("fig = plot.figure(figsize={%f, %f})\n", 
-                  param.height, 
-                  param.width);
-    // This obtains the plot object
-    buffer.Append("ax = fig.add_subplot(111)\n\n");
-    
-    // We need to start with the first to the last in each group
-    size_t max_group_size = GetMaximumGroupSize();
-    
-    // We start with the first bar in each group, and then the second, etc.
-    for(size_t i = 0;i < max_group_size;i++) {
-      // Need these two buffer to represent data list and pos list
-      Buffer data_buffer;
-      Buffer pos_buffer;
-      
-      data_buffer.Append('[');
-      pos_buffer.Append('[');
-      
-      // Then for each group check their i-th bar, and if it exists
-      // we add it to the buffer
-      for(const BarGroup &bg : group_list) {
-        if(i < bg.GetSize()) {
-          data_buffer.Printf("%f, ", bg.GetDataList().at(i)); 
-          pos_buffer.Printf("%f, ", bg.pos_list.at(i));
-        }
-      }
-      
-      // Close the two Python lists
-      data_buffer.Append(']');
-      pos_buffer.Append(']');
-      
-      // First of the line calling bar() method
-      buffer.Append("ax.bar(");
-      
-      // Add pos list
-      buffer.Append(pos_buffer);
-      buffer.Append(", ");
-      
-      // Add data list
-      buffer.Append(data_buffer);
-      
-      // And then add width and color
-      buffer.Printf(", %f, color=\"", bar_width);
-      color_scheme_p[i].AppendToBuffer(&buffer);
-      
-      buffer.Printf("\", label=\"");
-      buffer.Append(bar_name_list[i].c_str());
-      buffer.Printf("\")\n");
-    }
-    
-    buffer.Append('\n');
+    PrintBarPlot();
     
     return;
   }
