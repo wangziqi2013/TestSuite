@@ -257,6 +257,18 @@ class BarGroup {
   inline std::vector<double>::const_iterator end() const {
     return data_list.end();
   }
+  
+  /*
+   * GetTitle() - Returns the title of this bar group which is usually used
+   *              as the X axis tick
+   */
+  inline const std::string &GetTitle() const {
+    return title; 
+  }
+  
+  inline std::string &GetTitle() {
+    return title; 
+  }
 };
 
 /////////////////////////////////////////////////////////////////////
@@ -642,6 +654,31 @@ class BarChart {
     
     return;
   }
+  
+  /*
+   * PrintTockPlot() - This plots ticks on the X axis
+   */
+  void PrintTickPlot() {
+    // Set x axis ticks
+    buffer.Append("ax.set_xticks([");
+    // Loop over each bar group and then form a list
+    for(const BarGroup &bg : group_list) {
+      buffer.Printf("%f, ", bg.x_tick_pos);
+    }
+    
+    buffer.Append("])\n");
+    
+    // Then set labels
+    buffer.Append("ax.set_xticklabels([");
+    // Loop over each bar group and then form a list
+    for(const BarGroup &bg : group_list) {
+      buffer.Printf("\"%s\", ", bg.GetTitle().c_str());
+    }
+    
+    buffer.Append("])\n");
+    
+    return;
+  }
  
  public: 
   /*
@@ -761,6 +798,7 @@ class BarChart {
     
     PrintPrologue();
     PrintBarPlot();
+    PrintTickPlot();
     
     return;
   }
