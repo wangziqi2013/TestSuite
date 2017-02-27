@@ -412,6 +412,9 @@ class BarChart {
   // If it is empty string we do not draw them
   std::string x_axis_label;
   std::string y_axis_label;
+  
+  // Whether or not to draw legend. By default this is turned on
+  bool draw_legend_flag;
  private: 
   
   /*
@@ -657,7 +660,8 @@ class BarChart {
       pos_buffer.Append(']');
       
       // First of the line calling bar() method
-      buffer.Append("ax.bar(");
+      // and then save the rect object on variable "rect"
+      buffer.Append("rect_list = ax.bar(");
       
       // Add pos list
       buffer.Append(pos_buffer);
@@ -673,6 +677,16 @@ class BarChart {
       buffer.Printf("\", label=\"");
       buffer.Append(bar_name_list[i].c_str());
       buffer.Printf("\")\n");
+      
+      int j = 0;
+      for(const BarGroup &bg : group_list) {
+        if(i < bg.GetSize()) {
+          buffer.Printf("ax.text(rect_list[%d].get_x() + rect_list[%d].get_width() / 2, %f, \"%.2f\", ha='center', va='bottom')\n", 
+                        j, j, bg.GetDataList()[i], bg.GetDataList()[i]);
+          
+          j++;
+        }
+      }
     }
     
     buffer.Append('\n');
@@ -752,7 +766,8 @@ class BarChart {
     y_lower_limit{},
     bar_name_list{},
     x_axis_label{},
-    y_axis_label{}
+    y_axis_label{},
+    draw_legend_flag{true}
   {}
   
   /*
@@ -863,6 +878,15 @@ class BarChart {
   }
   
   /*
+   * SetLegendFlag() - Sets whether to draw legend
+   */
+  inline void SetLegendFlag(bool value) {
+    draw_legend_flag = value;
+    
+    return; 
+  }
+  
+  /*
    * Draw() - Draw the dirgram into a given file name
    */
   void Draw(const std::string output_file_name) {
@@ -878,6 +902,11 @@ class BarChart {
     
     // Then print statement to set Y limit values
     buffer.Printf("ax.set_ylim(%f, %f)\n\n", y_lower_limit, y_upper_limit);
+    
+    // At last set legend based on the flag
+    if(draw_legend_flag == true) {
+      buffer.Printf("");
+    }
     
     // The last step is to output the file
     buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')\n\n", 
