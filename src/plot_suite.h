@@ -350,6 +350,10 @@ class BarChart {
   // It will be set in SetPosition()
   double bar_width;
   
+  // This is set either using the value returned by GetYLimit() or 
+  // specify a value manually
+  double y_limit;
+  
   /*
    * GetBarWidth() - Returns the width of each bar in the graph
    *
@@ -372,6 +376,52 @@ class BarChart {
     // Then divide width by the bar count 
     return param.width / static_cast<double>(bar_count); 
   } 
+  
+  /*
+   * RoundUpToPoint5() - Round up a float number to the nearest 0.5
+   */
+  static double RoundUpToPoint5(double num) {
+    // First make it 10 times larger such that we could perform
+    // integer divisio on the number
+    num *= 10L;
+    size_t temp = static_cast<size_t>(num);
+    
+    // If it is not already a multiple of 5, we need to round it up
+    // to the nearest multiple of 5
+    if(temp % 5 != 0) {
+      temp = ((temp + 4) / 5) * 5;
+    }
+    
+    // And then convert it back
+    return static_cast<double>(temp) / 10L;
+  }
+  
+  /*
+   * GetYLimit() - Returns the y limit
+   *
+   * We compute y limit by multiplying the ratio in param object with the
+   * maximum value of all bars, and then round it up to .5
+   */
+  double GetYLimit() {
+    double max = 0.0;
+    bool first_time = true;
+    
+    // Iterate over each data point in each bar group
+    for(const BarGroup &bg : group_list) {
+      for(double data : bg.GetDataList()) {
+        if(first_time == true) {
+          first_time = false;
+          max = data;
+        } else {
+          if(data > max) {
+            max = data;
+          }
+        }
+      }
+    }
+    
+    return RoundUpToPoint5(max);
+  }
   
   /*
    * SetPosition() - Sets the position of all bars and X axis ticks
@@ -422,7 +472,7 @@ class BarChart {
     "import numpy\n\n";
   
   // Latex statements
-  static constexpr const char *python_tex_propogue = \
+  static constexpr const char *python_tex_prologue = \
     "mpl.rcParams['ps.useafm'] = True\n"
     "mpl.rcParams['pdf.use14corefonts'] = True\n"
     "mpl.rcParams['text.usetex'] = True\n"
@@ -438,7 +488,10 @@ class BarChart {
    * PrintPrologue() - Prints the prologue of the drawing script
    */
   void PrintPrologue() {
+    buffer.Append(python_import_prologue);
+    buffer.Append(python_tex_prologue);
     
+    return;
   }
  
  public: 
