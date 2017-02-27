@@ -223,6 +223,38 @@ class BarGroup {
   inline size_t GetSize() const {
     return data_list.size(); 
   }
+  
+  /*
+   * GetDataList() - Returns a reference of the data list
+   */
+  inline std::vector<double> &GetDataList() {
+    return data_list;
+  } 
+  
+  inline const std::vector<double> &GetDataList() const {
+    return data_list;
+  }
+  
+  /*
+   * The following allows the syntactic sugar for(it : obj) to be applied on
+   * this object
+   */
+  
+  inline std::vector<double>::iterator begin() {
+    return data_list.begin();
+  }
+  
+  inline std::vector<double>::iterator end() {
+    return data_list.end();
+  }
+  
+  inline std::vector<double>::const_iterator begin() const {
+    return data_list.begin();
+  }
+  
+  inline std::vector<double>::const_iterator end() const {
+    return data_list.end();
+  }
 };
 
 /////////////////////////////////////////////////////////////////////
@@ -315,6 +347,8 @@ extern ChartParameter default_chart_param;
  *                  such as graph title,  
  */
 class BarChart {
+  void RoundUpTest();
+  friend void RoundUpTest();
  private:
   // This stores data and group title.
   // Note that it is not required that all group have the same length
@@ -408,7 +442,7 @@ class BarChart {
     
     // Iterate over each data point in each bar group
     for(const BarGroup &bg : group_list) {
-      for(double data : bg.GetDataList()) {
+      for(double data : bg) {
         if(first_time == true) {
           first_time = false;
           max = data;
@@ -419,6 +453,10 @@ class BarChart {
         }
       }
     }
+    
+    // Y limit is the max Y value multiplied by a constant defined in
+    // the param object
+    max *= param.y_limit_ratio;
     
     return RoundUpToPoint5(max);
   }
