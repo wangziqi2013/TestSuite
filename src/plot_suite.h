@@ -76,9 +76,11 @@ class Color {
       if(ch >= '0' && ch <= '9') {
         hex_value[i] = static_cast<uint8_t>(ch) - static_cast<uint8_t>('0'); 
       } else if(ch >= 'a' && ch <= 'f') {
-        hex_value[i] = static_cast<uint8_t>(ch) - static_cast<uint8_t>('a');  
+        hex_value[i] = \
+          10 + static_cast<uint8_t>(ch) - static_cast<uint8_t>('a');  
       } else if(ch >= 'A' && ch <= 'F') {
-        hex_value[i] = static_cast<uint8_t>(ch) - static_cast<uint8_t>('A');  
+        hex_value[i] = \
+          10 + static_cast<uint8_t>(ch) - static_cast<uint8_t>('A');  
       } else {
         assert(false);
         throw "Invalid color format: Unknown character"; 
@@ -693,6 +695,9 @@ class BarChart {
    * Draw() - Draw the dirgram into a given file name
    */
   void Draw(const std::string output_file_name) {
+    SetPosition();
+    y_limit = GetYLimit();
+    
     PrintPrologue();
     
     // This defines the size of the diagram
@@ -738,10 +743,10 @@ class BarChart {
       buffer.Append(data_buffer);
       
       // And then add width and color
-      buffer.Printf(", %f, color=", bar_width);
+      buffer.Printf(", %f, color=\"", bar_width);
       color_scheme_p[i].AppendToBuffer(&buffer);
       
-      buffer.Printf(", label=\"");
+      buffer.Printf("\", label=\"");
       buffer.Append(bar_name_list[i].c_str());
       buffer.Printf("\")\n");
     }
