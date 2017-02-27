@@ -59,9 +59,43 @@ void RoundUpTest() {
   return;
 }
 
+/*
+ * PlotTest() - Check whether we could plot using the class
+ */
+void PlotTest() {
+  BarChart bc;
+  
+  bc.AppendBarGroup("Group 1");
+  bc.AppendData<int>(1);
+  bc.AppendData<int>(2);
+  bc.AppendData<int>(3);
+  bc.AppendBarGroup("Group 2");
+  bc.AppendData<int>(2);
+  bc.AppendData<int>(3);
+  bc.AppendData<int>(1);
+  bc.AppendBarGroup("Group 3");
+  bc.AppendData<int>(3);
+  bc.AppendData<int>(1);
+  bc.AppendData<int>(2);
+  bc.AppendBarGroup("Group 4");
+  bc.AppendData<int>(3);
+  bc.AppendData<int>(2);
+  bc.AppendData<int>(1);
+  
+  bc.AppendBarName("First");
+  bc.AppendBarName("Second");
+  bc.AppendBarName("Third");
+  
+  bc.Draw("File name.pdf");
+  bc.buffer.WriteToFile(stderr);
+  
+  return;
+}
+
 int main() {
   ColorTest();
   RoundUpTest();
+  PlotTest();
   
   return 0; 
 } 

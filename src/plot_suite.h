@@ -348,7 +348,10 @@ extern ChartParameter default_chart_param;
  */
 class BarChart {
   void RoundUpTest();
+  void PlotTest();
+  
   friend void RoundUpTest();
+  friend void PlotTest();
  private:
   // This stores data and group title.
   // Note that it is not required that all group have the same length
@@ -524,7 +527,7 @@ class BarChart {
    */
   size_t GetMaximumGroupSize() {
     // Corner case 
-    if(group_list.size() = 0UL) {
+    if(group_list.size() == 0UL) {
       dbg_printf("Bar group is empty while calculating the"
                  " maximum group size\n"); 
       
@@ -654,15 +657,6 @@ class BarChart {
   }
   
   /*
-   * AppendBarGroup() - Takes an existing bar group and append it
-   */
-  inline void AppendBarGroup(const BarGroup &bg) {
-    group_list.push_back(bg);
-    
-    return;
-  }
-  
-  /*
    * AppendData() - This function appends a data point into the last
    *                bar group
    *
@@ -704,7 +698,7 @@ class BarChart {
     // This defines the size of the diagram
     buffer.Printf("fig = plot.figure(figsize={%f, %f})\n", 
                   param.height, 
-                  param,width);
+                  param.width);
     // This obtains the plot object
     buffer.Append("ax = fig.add_subplot(111)\n\n");
     
@@ -748,8 +742,13 @@ class BarChart {
       color_scheme_p[i].AppendToBuffer(&buffer);
       
       buffer.Printf(", label=\"");
-      
+      buffer.Append(bar_name_list[i].c_str());
+      buffer.Printf("\")\n");
     }
+    
+    buffer.Append('\n');
+    
+    return;
   }
 };
 
