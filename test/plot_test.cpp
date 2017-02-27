@@ -35,8 +35,33 @@ void ColorTest() {
   return;
 }
 
+/*
+ * RoundUpTest() - Tests whether rounding works
+ */
+void RoundUpTest() {
+  _PrintTestName(); 
+  
+  double num = 5.68L;
+  dbg_printf("Prev = %f; After = %f\n", num, BarChart::RoundUpToPoint5(num));
+  
+  num = 7.00L;
+  dbg_printf("Prev = %f; After = %f\n", num, BarChart::RoundUpToPoint5(num));
+  
+  num = 9.15L;
+  dbg_printf("Prev = %f; After = %f\n", num, BarChart::RoundUpToPoint5(num));
+  
+  num = 15.00L;
+  dbg_printf("Prev = %f; After = %f\n", num, BarChart::RoundUpToPoint5(num));
+  
+  num = 27.46L;
+  dbg_printf("Prev = %f; After = %f\n", num, BarChart::RoundUpToPoint5(num));
+  
+  return;
+}
+
 int main() {
   ColorTest();
+  RoundUpTest();
   
   return 0; 
 } 
