@@ -681,7 +681,10 @@ class BarChart {
       int j = 0;
       for(const BarGroup &bg : group_list) {
         if(i < bg.GetSize()) {
-          buffer.Printf("ax.text(rect_list[%d].get_x() + rect_list[%d].get_width() / 2, %f, \"%.2f\", ha='center', va='bottom')\n", 
+          // This is the drawing statement for numeric labels over each bar
+          buffer.Printf("ax.text(rect_list[%d].get_x() + "
+                        "rect_list[%d].get_width() / 2, %f, \"%.2f\","
+                        " ha='center', va='bottom')\n", 
                         j, j, bg.GetDataList()[i], bg.GetDataList()[i]);
           
           j++;
@@ -892,6 +895,7 @@ class BarChart {
   void Draw(const std::string output_file_name) {
     SetPosition();
     
+    // Get y axis upper and lower limit
     y_upper_limit = GetYUpperLimit();
     y_lower_limit = GetYLowerLimit();
     
@@ -905,7 +909,9 @@ class BarChart {
     
     // At last set legend based on the flag
     if(draw_legend_flag == true) {
-      buffer.Printf("");
+      buffer.Printf("ax.legend(loc=\"%s\", prop={'size':%lu})\n\n",
+                    param.legend_position.c_str(),
+                    param.legend_font_size);
     }
     
     // The last step is to output the file
