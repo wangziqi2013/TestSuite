@@ -625,9 +625,9 @@ class BarChart {
    */
   void PrintBarPlot() {
     // This defines the size of the diagram
-    buffer.Printf("fig = plot.figure(figsize={%f, %f})\n", 
-                  param.height, 
-                  param.width);
+    buffer.Printf("fig = plot.figure(figsize=(%f, %f))\n", 
+                  param.width, 
+                  param.height);
     // This obtains the plot object
     buffer.Append("ax = fig.add_subplot(111)\n\n");
     
