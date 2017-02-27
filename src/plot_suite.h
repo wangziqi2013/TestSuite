@@ -388,6 +388,11 @@ class BarChart {
   // specify a value manually
   double y_limit;
   
+  // Element i in this list is the name that will be printed on the 
+  // legend for bar i in the plot
+  std::vector<std::string> bar_name_list;
+ private: 
+  
   /*
    * GetBarWidth() - Returns the width of each bar in the graph
    *
@@ -588,7 +593,8 @@ class BarChart {
     x_label{},
     y_label{},
     buffer{},
-    bar_width{}
+    bar_width{},
+    bar_name_list{}
   {}
   
   /*
@@ -679,6 +685,17 @@ class BarChart {
   }
   
   /*
+   * AppendBarName() - Appends the name of a bar
+   *
+   * The name will be printed in the legend
+   */
+  inline void AppendBarName(const std::string &name) {
+    bar_name_list.push_back(name);
+    
+    return;
+  }
+  
+  /*
    * Draw() - Draw the dirgram into a given file name
    */
   void Draw(const std::string output_file_name) {
@@ -691,7 +708,48 @@ class BarChart {
     // This obtains the plot object
     buffer.Append("ax = fig.add_subplot(111)\n\n");
     
+    // We need to start with the first to the last in each group
+    size_t max_group_size = GetMaximumGroupSize();
     
+    // We start with the first bar in each group, and then the second, etc.
+    for(size_t i = 0;i < max_group_size;i++) {
+      // Need these two buffer to represent data list and pos list
+      Buffer data_buffer;
+      Buffer pos_buffer;
+      
+      data_buffer.Append('[');
+      pos_buffer.Append('[');
+      
+      // Then for each group check their i-th bar, and if it exists
+      // we add it to the buffer
+      for(const BarGroup &bg : group_list) {
+        if(i < bg.GetSize()) {
+          data_buffer.Printf("%f, ", bg.GetDataList().at(i)); 
+          pos_buffer.Printf("%f, ", bg.pos_list.at(i));
+        }
+      }
+      
+      // Close the two Python lists
+      data_buffer.Append(']');
+      pos_buffer.Append(']');
+      
+      // First of the line calling bar() method
+      buffer.Append("ax.bar(");
+      
+      // Add pos list
+      buffer.Append(pos_buffer);
+      buffer.Append(", ");
+      
+      // Add data list
+      buffer.Append(data_buffer);
+      
+      // And then add width and color
+      buffer.Printf(", %f, color=", bar_width);
+      color_scheme_p[i].AppendToBuffer(&buffer);
+      
+      buffer.Printf(", label=\"");
+      
+    }
   }
 };
 
