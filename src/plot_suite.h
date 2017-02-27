@@ -4,6 +4,8 @@
 #ifndef _PLOT_SUITE_H
 #define _PLOT_SUITE_H
 
+#include "Python.h"
+
 #include "buffer.h"
 #include "test_suite.h"
 
@@ -321,7 +323,7 @@ class ChartParameter {
                  double p_y_limit_ratio,
                  const std::string &p_legend_position) :
     width{p_width},
-    height{p_width},
+    height{p_height},
     x_tick_font_size{p_x_tick_font_size},
     y_tick_font_size{p_y_tick_font_size},
     x_font_size{p_x_font_size},
@@ -336,7 +338,7 @@ class ChartParameter {
    */
   ChartParameter(const ChartParameter &other) :
     width{other.width},
-    height{other.width},
+    height{other.height},
     x_tick_font_size{other.x_tick_font_size},
     y_tick_font_size{other.y_tick_font_size},
     x_font_size{other.x_font_size},
@@ -397,9 +399,10 @@ class BarChart {
   // It will be set in SetPosition()
   double bar_width;
   
-  // This is set either using the value returned by GetYLimit() or 
+  // This is set either using the value returned by GetYUpperLimit() or 
   // specify a value manually
-  double y_limit;
+  double y_upper_limit;
+  double y_lower_limit;
   
   // Element i in this list is the name that will be printed on the 
   // legend for bar i in the plot
@@ -460,12 +463,33 @@ class BarChart {
   }
   
   /*
-   * GetYLimit() - Returns the y limit
+   * GetYLowerLimit() - Returns the lower limit of Y
    *
-   * We compute y limit by multiplying the ratio in param object with the
+   * This will be 0 if all data points are >= 0; Otherwise will be
+   * set to the minimum negative value
+   */
+  double GetYLowerLimit() {
+    double min = 0.0L;
+    
+    for(const BarGroup &bg : group_list) {
+      for(double data : bg) {
+        if(data < min) {
+          min = data; 
+        }
+      }
+    }
+    
+    // Most likely be 0
+    return min;
+  }
+  
+  /*
+   * GetYUpperLimit() - Returns the y limit
+   *
+   * We compute y upper limit by multiplying the ratio in param object with the
    * maximum value of all bars, and then round it up to .5
    */
-  double GetYLimit() {
+  double GetYUpperLimit() {
     double max = 0.0;
     bool first_time = true;
     
@@ -693,7 +717,19 @@ class BarChart {
    * PrintLabelPlot() - This prints labels in the script
    */
   void PrintLabelPlot() {
-    buffer.Append("ax.set_ylabel(\"%s\", fontsize=%lu, weight='bold')");
+    if(x_axis_label.size() != 0UL) {
+      buffer.Printf("ax.set_xlabel(\"%s\", fontsize=%lu, weight='bold')\n",
+                    x_axis_label.c_str(), param.x_font_size);
+    }
+    
+    if(y_axis_label.size() != 0UL) {
+      buffer.Printf("ax.set_ylabel(\"%s\", fontsize=%lu, weight='bold')\n",
+                    y_axis_label.c_str(), param.y_font_size);
+    }
+    
+    buffer.Append('\n');
+    
+    return;
   }
  
  public: 
@@ -712,6 +748,8 @@ class BarChart {
     y_label{},
     buffer{},
     bar_width{},
+    y_upper_limit{},
+    y_lower_limit{},
     bar_name_list{},
     x_axis_label{},
     y_axis_label{}
@@ -809,15 +847,19 @@ class BarChart {
   /*
    * SetXAxisLabel() - Sets the label on the X axis
    */
-  inline SetXAxisLabel(const std::string &x_label) {
+  inline void SetXAxisLabel(const std::string &x_label) {
     x_axis_label = x_label;
+    
+    return;
   }
   
   /*
    * SetYAxisLabel() - Sets the label on the X axis
    */
-  inline SetYAxisLabel(const std::string &y_label) {
+  inline void SetYAxisLabel(const std::string &y_label) {
     y_axis_label = y_label;
+    
+    return;
   }
   
   /*
@@ -825,11 +867,26 @@ class BarChart {
    */
   void Draw(const std::string output_file_name) {
     SetPosition();
-    y_limit = GetYLimit();
+    
+    y_upper_limit = GetYUpperLimit();
+    y_lower_limit = GetYLowerLimit();
     
     PrintPrologue();
     PrintBarPlot();
     PrintTickPlot();
+    PrintLabelPlot();
+    
+    // Then print statement to set Y limit values
+    buffer.Printf("ax.set_ylim(%f, %f)\n\n", y_lower_limit, y_upper_limit);
+    
+    // The last step is to output the file
+    buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')\n\n", 
+                  output_file_name.c_str());
+
+    // Execute the code using Python
+    Py_Initialize();
+    PyRun_SimpleString(buffer.GetCharData());
+    Py_Finalize();
     
     return;
   }

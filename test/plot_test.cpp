@@ -86,6 +86,8 @@ void PlotTest() {
   bc.AppendBarName("Second");
   bc.AppendBarName("Third");
   
+  bc.SetYAxisLabel("Y Label");
+  
   bc.Draw("File name.pdf");
   bc.buffer.WriteToFile(stderr);
   

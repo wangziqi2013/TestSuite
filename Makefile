@@ -11,7 +11,7 @@ all: $(BIN)
 	./intskey_test-bin
 
 %: ./test/%.cpp ./src/test_suite.cpp ./src/plot_suite.cpp
-	$(CXX) -g -Wall -Werror -I./src/ -std=c++11 -pthread -o ./bin/$@ $^
+	$(CXX) -g -Wall -Werror -I./src/ -I/usr/include/python2.7/ -std=c++11 -pthread -o ./bin/$@ $^ -lpython2.7
 	ln -sf ./bin/$@ ./$@-bin
 
 prepare:
