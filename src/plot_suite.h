@@ -419,6 +419,9 @@ class BarChart {
     // integer divisio on the number
     num *= 10L;
     size_t temp = static_cast<size_t>(num);
+    if(static_cast<double>(temp) < num) {
+      temp++; 
+    }
     
     // If it is not already a multiple of 5, we need to round it up
     // to the nearest multiple of 5

@@ -41,7 +41,7 @@ void ColorTest() {
 void RoundUpTest() {
   _PrintTestName(); 
   
-  double num = 5.68L;
+  double num = 5.92L;
   dbg_printf("Prev = %f; After = %f\n", num, BarChart::RoundUpToPoint5(num));
   
   num = 7.00L;
@@ -50,10 +50,10 @@ void RoundUpTest() {
   num = 9.15L;
   dbg_printf("Prev = %f; After = %f\n", num, BarChart::RoundUpToPoint5(num));
   
-  num = 15.00L;
+  num = 15.55L;
   dbg_printf("Prev = %f; After = %f\n", num, BarChart::RoundUpToPoint5(num));
   
-  num = 27.46L;
+  num = 27.41L;
   dbg_printf("Prev = %f; After = %f\n", num, BarChart::RoundUpToPoint5(num));
   
   return;
