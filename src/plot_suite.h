@@ -253,6 +253,10 @@ class ChartParameter {
   // Legend font size
   uint32_t legend_font_size;
   
+  // This is for determining the value of y limit
+  // We multiply this value and the maximum y value as the y limit
+  double y_limit_ratio;
+  
   // This is the position of the legend; expressed in the format that
   // matplotlib could recognize (i.e. we do not use C++ constants for 
   // this field)
@@ -268,6 +272,7 @@ class ChartParameter {
                  uint32_t p_x_font_size,
                  uint32_t p_y_font_size,
                  uint32_t p_legend_font_size,
+                 double p_y_limit_ratio,
                  const std::string &p_legend_position) :
     width{p_width},
     height{p_width},
@@ -276,6 +281,7 @@ class ChartParameter {
     x_font_size{p_x_font_size},
     y_font_size{p_y_font_size},
     legend_font_size{p_legend_font_size},
+    y_limit_ratio{p_y_limit_ratio},
     legend_position{p_legend_position}
   {}
   
@@ -290,6 +296,7 @@ class ChartParameter {
     x_font_size{other.x_font_size},
     y_font_size{other.y_font_size},
     legend_font_size{other.legend_font_size},
+    y_limit_ratio{other.y_limit_ratio},
     legend_position{other.legend_position}
   {}
 };

@@ -40,6 +40,8 @@ ChartParameter default_chart_param{
   20,
   // Legend font size
   12,
+  // y limit ratio
+  1.2L,
   // Legend position
   "upper left"
 };
