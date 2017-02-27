@@ -381,10 +381,6 @@ class BarChart {
   // or customized
   Color *color_scheme_p;
   
-  // This corresponds with the color - the color on index i
-  // has a legend title on this list at position i
-  std::vector<std::string> legend_title_list;
-  
   // The following are parameters that could be tweaked but usually kept
   // as-is
   ChartParameter param;
@@ -408,6 +404,11 @@ class BarChart {
   // Element i in this list is the name that will be printed on the 
   // legend for bar i in the plot
   std::vector<std::string> bar_name_list;
+  
+  // This is the label of X and Y axis
+  // If it is empty string we do not draw them
+  std::string x_axis_label;
+  std::string y_axis_label;
  private: 
   
   /*
@@ -656,7 +657,7 @@ class BarChart {
   }
   
   /*
-   * PrintTockPlot() - This plots ticks on the X axis
+   * PrintTickPlot() - This plots ticks on the X axis
    */
   void PrintTickPlot() {
     // Set x axis ticks
@@ -675,9 +676,24 @@ class BarChart {
       buffer.Printf("\"%s\", ", bg.GetTitle().c_str());
     }
     
-    buffer.Append("])\n");
+    buffer.Append("])\n\n");
+    
+    // Then change tick font size
+    buffer.Append("for label in ax.get_xticklabels():\n");
+    buffer.Printf("    label.set_fontsize(%lu)\n\n", param.x_tick_font_size);
+    
+    // Then change tick font size
+    buffer.Append("for label in ax.get_yticklabels():\n");
+    buffer.Printf("    label.set_fontsize(%lu)\n\n", param.y_tick_font_size);
     
     return;
+  }
+  
+  /*
+   * PrintLabelPlot() - This prints labels in the script
+   */
+  void PrintLabelPlot() {
+    buffer.Append("ax.set_ylabel(\"%s\", fontsize=%lu, weight='bold')");
   }
  
  public: 
@@ -688,7 +704,6 @@ class BarChart {
     group_list{},
     chart_title{p_chart_title},
     color_scheme_p{RED_COLOR_SCHEME},
-    legend_title_list{},
     // Use the default parameters inside the constructor
     // if we need to modify this then just modify it later
     param{default_chart_param},
@@ -697,7 +712,9 @@ class BarChart {
     y_label{},
     buffer{},
     bar_width{},
-    bar_name_list{}
+    bar_name_list{},
+    x_axis_label{},
+    y_axis_label{}
   {}
   
   /*
@@ -787,6 +804,20 @@ class BarChart {
     bar_name_list.push_back(name);
     
     return;
+  }
+  
+  /*
+   * SetXAxisLabel() - Sets the label on the X axis
+   */
+  inline SetXAxisLabel(const std::string &x_label) {
+    x_axis_label = x_label;
+  }
+  
+  /*
+   * SetYAxisLabel() - Sets the label on the X axis
+   */
+  inline SetYAxisLabel(const std::string &y_label) {
+    y_axis_label = y_label;
   }
   
   /*
