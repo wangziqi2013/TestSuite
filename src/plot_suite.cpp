@@ -2,7 +2,7 @@
 #include "plot_suite.h"
 
 // This is the maximum number of bars in a group
-const size_t TOTAL_GROUP_SIZE = 9;
+const size_t MAX_COLOR_COUNT = 9;
 
 Color RED_COLOR_SCHEME[] = {
   Color{"#fff7ec"}, 

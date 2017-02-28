@@ -353,7 +353,7 @@ class ChartParameter {
 // We could customize one by ourselves but this should be sufficient for
 // most charts
 extern ChartParameter default_chart_param;
-extern const size_t TOTAL_GROUP_SIZE;
+extern const size_t MAX_COLOR_COUNT;
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -641,17 +641,12 @@ class BarChart {
                   param.height);
     // This obtains the plot object
     buffer.Append("ax = fig.add_subplot(111)\n\n");
-    
+
     // We need to start with the first to the last in each group
     // Currently because t=of color configuration problems we only
     // support a maximum of certain number of bars in a group
     size_t max_group_size = GetMaximumGroupSize();
-    if(max_group_size > TOTAL_GROUP_SIZE) {
-      assert(false);
-      
-      throw "Maximum supported group size is exceeded"; 
-    }
-    
+
     // We start with the first bar in each group, and then the second, etc.
     for(size_t i = 0;i < max_group_size;i++) {
       // Need these two buffer to represent data list and pos list
@@ -771,6 +766,53 @@ class BarChart {
     // Execute the code using Python
     PyRun_SimpleString(data_p);
     
+    
+    return;
+  }
+  
+  /*
+   * Verify() - This checks whether the bar chart is consistent
+   *
+   * We check the following:
+   *   (1) The number of data points in each BarGroup should be the same
+   *   (2) The number of data points in every BarGroup must equal the number
+   *       of bar names
+   *   (3) The number of bars in each group must be smaller than or equal to
+   *       the maximum value supported (which is a global variable)
+   *   (4) There is at least one group
+   *
+   * If any of the above conditions fails we throw an exception
+   */
+  void Verify() const {
+    // This checks condition (4)
+    if(group_list.size() == 0UL) {
+      assert(false);
+      throw "There must be at least one group to draw the plot"; 
+    }
+    
+    // Otherwise we know there is at least one group, so just get
+    // its bar count and compare with all the rest
+    const size_t bar_count = group_list.at(0).GetSize();
+    
+    // This checks condition (1)
+    for(const BarGroup &bg : group_list) {
+      if(bar_count != bg.GetSize()) {
+        assert(false);
+        throw "Inconsistent bar count in BarGroup objects";
+      }
+    }
+    
+    // This checks condition (2)
+    if(bar_count != bar_name_list.size()) {
+      assert(false);
+      throw "Inconsistent bar count and bar names"; 
+    }
+    
+    // This checks condition (3)
+    if(bar_count > MAX_COLOR_COUNT) {
+      assert(false);
+      throw "Exceeded the maximum number of bars allowed";
+    }
     
     return;
   }
@@ -940,6 +982,7 @@ class BarChart {
    * Draw() - Draw the dirgram into a given file name
    */
   void Draw(const std::string output_file_name) {
+    Verify();
     buffer.Reset();
     
     SetPosition();
@@ -993,6 +1036,8 @@ class BarChart {
    * vertically or aligned horizontally
    */
   void DrawLegend(const std::string &output_file_name, bool vertical=false) {
+    Verify();
+    
     // Clear all contents of the buffer
     legend_buffer.Reset();
     
@@ -1011,6 +1056,8 @@ class BarChart {
     // For each bar name in the bar list we draw the legend
     for(const std::string bar_name : bar_name_list) {
       // Thie creates a patch object using the color and label
+      // Linewidth draw the border, and edge color must be black to make it
+      // prominent; facecolor is the filling color of the block
       legend_buffer.Printf(
         "patches.append(mpatches.Patch(linewidth=1, edgecolor=\"#000000\", "
         "label=\"%s\", facecolor=\"", 
@@ -1034,6 +1081,8 @@ class BarChart {
       column_count = static_cast<int>(bar_name_list.size());
     }
     
+    // If it is horizontal then the number of columns is the numbre of 
+    // members in the bar group
     legend_buffer.Printf(
       "fig.legend(patches, labels, loc='center', frameon=False, ncol=%d)\n", 
       column_count);
@@ -1049,6 +1098,18 @@ class BarChart {
     
     return;
   }
+};
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+/*
+ * class LineChart - This class represents a line chart 
+ */
+class LineChart {
+ private:
+   
 };
 
 #endif
