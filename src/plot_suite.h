@@ -1109,7 +1109,64 @@ class LineChart {
   std::vector<std::string> name_list;
   
  public:
+  /*
+   * LineChart() - Draw line chart using matplotlib
+   */
   LineChart() :
+    x_list{},
+    y_list_list{},
+    name_list{} {
+    // Initialize python interface
+    Py_Initialize();
+    
+    return;  
+  }
+  
+  /*
+   * Destructor
+   */
+  ~LineChart() {
+    // Destroy the Python environment
+    Py_Finalize();
+    
+    return;
+  } 
+  
+  /*
+   * AppendXValues() - Adding values into the x axis data points
+   */
+  template <typename T>
+  void AppendXValues(size_t count, T *data_p) {
+    // First allocate a chunk of memory of the size count
+    x_list.resize(count);
+    
+    // Then do an element copy
+    for(int i = 0;i < count;i++) {
+      x_list[i] = static_cast<double>(data_p[i]);
+    }
+    
+    return;
+  }
+  
+  /*
+   * AppendXValues() - Adding values in a vector
+   */
+  template <typename T>
+  inline void AppendXValues(const std::vector<T> data_list) {
+    AppendXValues(data_list.size(), &data_list[0]);
+    
+    return;
+  }
+  
+  /*
+   * AppendXValue() - Appends a X value into the x value list
+   */
+  template <typename T>
+  void AppendXValue(T value) {
+    x_list.push_back(static_cast<double>(value));
+    
+    return; 
+  }
      
 };
 
