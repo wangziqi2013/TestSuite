@@ -1106,7 +1106,10 @@ class LineChart {
   std::vector<std::vector<double>> y_list_list; 
   
   // This is a list of names for lines in the plot
-  std::vector<std::string> name_list;
+  std::vector<std::string> line_name_list;
+  
+  // This is the parameter value for common attributes
+  ChartParameter param;
   
  public:
   /*
@@ -1115,7 +1118,8 @@ class LineChart {
   LineChart() :
     x_list{},
     y_list_list{},
-    name_list{} {
+    line_name_list{},
+    param{default_chart_param} {
     // Initialize python interface
     Py_Initialize();
     
@@ -1221,6 +1225,15 @@ class LineChart {
    */
   inline void NewYValueList() {
     y_list_list.emplace_back();
+    
+    return;
+  }
+  
+  /*
+   * AppendLineName() - Appends the name of a line into the name list
+   */
+  inline void AppendLineName(const std::string &name) {
+    line_name_list.push_back(name);
     
     return;
   }
