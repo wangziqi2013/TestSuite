@@ -1137,12 +1137,12 @@ class LineChart {
    */
   template <typename T>
   void AppendXValues(size_t count, T *data_p) {
-    // First allocate a chunk of memory of the size count
-    x_list.resize(count);
+    // Reserve enough space first to reduce memory allocation
+    x_list.reserve(count + x_list.size());
     
     // Then do an element copy
     for(int i = 0;i < count;i++) {
-      x_list[i] = static_cast<double>(data_p[i]);
+      x_list.push_back(static_cast<double>(data_p[i]));
     }
     
     return;
@@ -1166,6 +1166,63 @@ class LineChart {
     x_list.push_back(static_cast<double>(value));
     
     return; 
+  }
+  
+  /*
+   * AppendYValueList() - This function appends a new array into Y list
+   *
+   * A new list is created in order to receive these values
+   */
+  template <typename T>
+  void AppendYValueList(size_t count, T *data_p) {
+    // Create a new list of y values
+    NewYValueList();
+    
+    std::vector<double> *v_p = &y_list_list.back();
+    v_p->resize(count);
+    
+    // Convert and copy
+    for(size_t i = 0;i < count;i++) {
+      (*v_p)[i] = static_cast<double>(data_p[i]);
+    }
+    
+    return;
+  }
+  
+  /*
+   * AppendYValueList() - This function appends a new list of values into 
+   *                      the y list
+   */
+  template <typename T>
+  void AppendYValueList(const std::vector<T> data_list) {
+    AppendYValueList(data_list.size(), &data_list[0]);
+    
+    return;
+  }
+  
+  /*
+   * AppendYValue() - Appends a new Y value into the current list
+   */
+  template <typename T>
+  void AppendYValue(T value) {
+    if(y_list_list.size() == 0) {
+      assert(false); 
+      throw "There is no list of Y values created yet";
+    }
+    
+    // Push back the value into the list
+    y_list_list.back().push_back(static_cast<double>(value));
+    
+    return;
+  }
+  
+  /*
+   * NewYValueList() - This function creates a new Y value list
+   */
+  inline void NewYValueList() {
+    y_list_list.emplace_back();
+    
+    return;
   }
      
 };
