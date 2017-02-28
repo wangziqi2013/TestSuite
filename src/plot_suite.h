@@ -761,6 +761,13 @@ class BarChart {
     
     return;
   }
+  
+  /*
+   * ExecutePython() - Executes python code
+   */
+  void ExecutePython() {
+    
+  }
  
  public: 
   /*
@@ -958,6 +965,38 @@ class BarChart {
     Py_Finalize();
     
     return;
+  }
+  
+  /*
+   * DrawLegend() - Draws the legend
+   */
+  void DrawLegend(const std::string &output_file_name) {
+    Buffer legend_buffer;
+    
+    lenegd_buffer.Append("fig = plt.figure(figsize=(2, 1.25))\n");
+    lenegd_buffer.Append("patches = []\n");
+    lenegd_buffer.Append("labels = []\n");
+    
+    // For each bar name in the bar list we draw the legend
+    for(const std::string bar_name : bar_name_list) {
+      // Thie creates a patch object using the color and label
+      legend_buffer.Append(
+        "patches.append(mpatches.Patch(label=\"%s\", color=\"", 
+        bar_name.c_str());
+      param.color_scheme_p.AppendToBuffer(&legend_buffer);
+      legend_buffer.Append("\"))\n");
+      
+      // Also append laels into the list
+      legend_buffer.Append("labels.append(\"%s\")\n", bar_name.c_str());
+    }
+    
+    legend_buffer.Append('\n');
+    
+    legend_buffer.Append("fig.legend(patches, labels, loc='center', frameon=False)\n");
+    legend_buffer.Append("plt.savefig(\"%s\", bbox_inches='tight')\n\n", 
+                         output_file_name.c_str());
+                         
+    
   }
 };
 
