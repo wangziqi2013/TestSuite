@@ -91,7 +91,10 @@ void PlotTest() {
   bc.SetLegendVerticalFlag(true);
   
   bc.Draw("File name.pdf");
-  bc.buffer.WriteToFile(stderr);
+  dbg_printf("Finished plotting bar chart\n");
+  bc.DrawLegend("File name legend.pdf");
+  
+  //bc.buffer.WriteToFile(stderr);
   
   return;
 }

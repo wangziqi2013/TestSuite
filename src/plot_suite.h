@@ -767,11 +767,10 @@ class BarChart {
    */
   static void ExecutePython(const char *data_p) {
     // Execute the code using Python
-    Py_Initialize();
     PyRun_SimpleString(data_p);
-    Py_Finalize();
     
-    return
+    
+    return;
   }
  
  public: 
@@ -796,8 +795,12 @@ class BarChart {
     x_axis_label{},
     y_axis_label{},
     draw_legend_flag{true},
-    legend_vertical_flag{true}
-  {}
+    legend_vertical_flag{true} {
+    // Initialize the python environment
+    Py_Initialize();
+    
+    return;  
+  }
   
   /*
    * Constructor - Anonymous graph which does not have a title
@@ -809,7 +812,12 @@ class BarChart {
   /*
    * Destructor
    */
-  ~BarChart() {} 
+  ~BarChart() {
+    // Destroy the Python environment
+    Py_Finalize();
+    
+    return;
+  } 
   
   /*
    * AppendBarGroup() - Appends a new bar group into the chart
@@ -963,6 +971,9 @@ class BarChart {
     // The last step is to output the file
     buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')\n\n", 
                   output_file_name.c_str());
+                  
+    // Make it a C language string
+    buffer.Append('\0');
 
     // At last execute is using the interpreter
     ExecutePython(buffer.GetCharData());
@@ -972,33 +983,57 @@ class BarChart {
   
   /*
    * DrawLegend() - Draws the legend in a separate plot and output to a file
+   *
+   * The argument "vertical" specifies whether the items should be stacked
+   * vertically or aligned horizontally
    */
-  void DrawLegend(const std::string &output_file_name) {
+  void DrawLegend(const std::string &output_file_name, bool vertical=false) {
     Buffer legend_buffer;
     
-    lenegd_buffer.Append("fig = plt.figure(figsize=(2, 1.25))\n");
-    lenegd_buffer.Append("patches = []\n");
-    lenegd_buffer.Append("labels = []\n");
+    legend_buffer.Append("import matplotlib.patches as mpatches\n");
+    legend_buffer.Append("fig = plot.figure(figsize=(2, 1))\n");
+    legend_buffer.Append("patches = []\n");
+    legend_buffer.Append("labels = []\n");
+    
+    // We need this to address color object
+    int index = 0;
     
     // For each bar name in the bar list we draw the legend
     for(const std::string bar_name : bar_name_list) {
       // Thie creates a patch object using the color and label
-      legend_buffer.Append(
-        "patches.append(mpatches.Patch(label=\"%s\", color=\"", 
+      legend_buffer.Printf(
+        "patches.append(mpatches.Patch(linewidth=1, edgecolor=\"#000000\", "
+        "label=\"%s\", facecolor=\"", 
         bar_name.c_str());
-      param.color_scheme_p.AppendToBuffer(&legend_buffer);
+      
+      // Print color into the buffer  
+      color_scheme_p[index].AppendToBuffer(&legend_buffer);
       legend_buffer.Append("\"))\n");
       
       // Also append laels into the list
-      legend_buffer.Append("labels.append(\"%s\")\n", bar_name.c_str());
+      legend_buffer.Printf("labels.append(\"%s\")\n", bar_name.c_str());
+      
+      index++;
     }
     
     legend_buffer.Append('\n');
     
-    legend_buffer.Append("fig.legend(patches, labels, loc='center', frameon=False)\n");
-    legend_buffer.Append("plt.savefig(\"%s\", bbox_inches='tight')\n\n", 
+    // If we need horizontal legend then just use the size of the list
+    int column_count = 1;
+    if(vertical == false) {
+      column_count = static_cast<int>(bar_name_list.size());
+    }
+    
+    legend_buffer.Printf(
+      "fig.legend(patches, labels, loc='center', frameon=False, ncol=%d)\n", 
+      column_count);
+    
+    legend_buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')\n\n", 
                          output_file_name.c_str());
-           
+    
+    // Make it a C language string
+    legend_buffer.Append('\0');
+    
     // At last execute it              
     ExecutePython(legend_buffer.GetCharData());
     
