@@ -763,10 +763,15 @@ class BarChart {
   }
   
   /*
-   * ExecutePython() - Executes python code
+   * ExecutePython() - Executes python code stored in a char array
    */
-  void ExecutePython() {
+  static void ExecutePython(const char *data_p) {
+    // Execute the code using Python
+    Py_Initialize();
+    PyRun_SimpleString(data_p);
+    Py_Finalize();
     
+    return
   }
  
  public: 
@@ -959,16 +964,14 @@ class BarChart {
     buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')\n\n", 
                   output_file_name.c_str());
 
-    // Execute the code using Python
-    Py_Initialize();
-    PyRun_SimpleString(buffer.GetCharData());
-    Py_Finalize();
+    // At last execute is using the interpreter
+    ExecutePython(buffer.GetCharData());
     
     return;
   }
   
   /*
-   * DrawLegend() - Draws the legend
+   * DrawLegend() - Draws the legend in a separate plot and output to a file
    */
   void DrawLegend(const std::string &output_file_name) {
     Buffer legend_buffer;
@@ -995,8 +998,11 @@ class BarChart {
     legend_buffer.Append("fig.legend(patches, labels, loc='center', frameon=False)\n");
     legend_buffer.Append("plt.savefig(\"%s\", bbox_inches='tight')\n\n", 
                          output_file_name.c_str());
-                         
+           
+    // At last execute it              
+    ExecutePython(legend_buffer.GetCharData());
     
+    return;
   }
 };
 
