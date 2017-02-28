@@ -377,9 +377,6 @@ class BarChart {
   // the width of each group 
   std::vector<BarGroup> group_list;
   
-  // The title of the bar chart. If its length is 0 we do not draw anything 
-  std::string chart_title;
-  
   // This is a pointer to the color scheme, which could be predefined
   // or customized
   Color *color_scheme_p;
@@ -821,9 +818,8 @@ class BarChart {
   /*
    * Constructor
    */
-  BarChart(const std::string &p_chart_title) :
+  BarChart() :
     group_list{},
-    chart_title{p_chart_title},
     color_scheme_p{RED_COLOR_SCHEME},
     // Use the default parameters inside the constructor
     // if we need to modify this then just modify it later
@@ -846,13 +842,6 @@ class BarChart {
     
     return;  
   }
-  
-  /*
-   * Constructor - Anonymous graph which does not have a title
-   */
-  BarChart() :
-    BarChart{""}
-  {}
   
   /*
    * Destructor
@@ -1109,7 +1098,19 @@ class BarChart {
  */
 class LineChart {
  private:
-   
+  // This is a list of x values
+  std::vector<double> x_list;
+  
+  // This is a list of y values
+  // Each y value set is represented using a vector
+  std::vector<std::vector<double>> y_list_list; 
+  
+  // This is a list of names for lines in the plot
+  std::vector<std::string> name_list;
+  
+ public:
+  LineChart() :
+     
 };
 
 #endif
