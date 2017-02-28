@@ -353,6 +353,7 @@ class ChartParameter {
 // We could customize one by ourselves but this should be sufficient for
 // most charts
 extern ChartParameter default_chart_param;
+extern const size_t TOTAL_GROUP_SIZE;
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -640,7 +641,14 @@ class BarChart {
     buffer.Append("ax = fig.add_subplot(111)\n\n");
     
     // We need to start with the first to the last in each group
+    // Currently because t=of color configuration problems we only
+    // support a maximum of certain number of bars in a group
     size_t max_group_size = GetMaximumGroupSize();
+    if(max_group_size > TOTAL_GROUP_SIZE) {
+      assert(false);
+      
+      throw "Maximum supported group size is exceeded"; 
+    }
     
     // We start with the first bar in each group, and then the second, etc.
     for(size_t i = 0;i < max_group_size;i++) {

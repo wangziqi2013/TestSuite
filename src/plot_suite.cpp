@@ -1,6 +1,9 @@
 
 #include "plot_suite.h"
 
+// This is the maximum number of bars in a group
+const size_t TOTAL_GROUP_SIZE = 9;
+
 Color RED_COLOR_SCHEME[] = {
   Color{"#fff7ec"}, 
   Color{"#fee8c8"}, 
@@ -43,5 +46,17 @@ ChartParameter default_chart_param{
   // y limit ratio
   1.1L,
   // Legend position
+  //"right"
+	//"center left"
+	//"upper right"
+	//"lower right"
+	//"best"
+	//"center"
+	//"lower left"
+	//"center right"
+	//"upper left"
+	//"upper center"
+	//"lower center"
   "upper left"
+  //"best"
 };
