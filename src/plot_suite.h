@@ -415,6 +415,11 @@ class BarChart {
   
   // Whether or not to draw legend. By default this is turned on
   bool draw_legend_flag;
+  
+  // If this is true then legend items stack up vertically
+  // Otherwise they are aligned horizontally
+  // This is by default set to true
+  bool legend_vertical_flag;
  private: 
   
   /*
@@ -770,7 +775,8 @@ class BarChart {
     bar_name_list{},
     x_axis_label{},
     y_axis_label{},
-    draw_legend_flag{true}
+    draw_legend_flag{true},
+    legend_vertical_flag{true}
   {}
   
   /*
@@ -890,6 +896,16 @@ class BarChart {
   }
   
   /*
+   * SetLegendVerticalFlag() - If this is set to true then we draw all legend
+   *                           items as a stack of vertical items
+   */
+  inline void SetLegendVerticalFlag(bool value) {
+    legend_vertical_flag = value;
+    
+    return;
+  }
+  
+  /*
    * Draw() - Draw the dirgram into a given file name
    */
   void Draw(const std::string output_file_name) {
@@ -909,9 +925,19 @@ class BarChart {
     
     // At last set legend based on the flag
     if(draw_legend_flag == true) {
-      buffer.Printf("ax.legend(loc=\"%s\", prop={'size':%lu})\n\n",
+      // This is the number of columns in the legend
+      // If we set it to 1 then there is only 1 column, i.e. legend items are 
+      // stacked vertically
+      int legend_col_num = 1;
+      if(legend_vertical_flag == false) {
+        legend_col_num = GetMaximumGroupSize();
+      }
+      
+      // Draw the legends
+      buffer.Printf("ax.legend(loc=\"%s\", prop={'size':%lu}, ncol=%d)\n\n",
                     param.legend_position.c_str(),
-                    param.legend_font_size);
+                    param.legend_font_size,
+                    legend_col_num);
     }
     
     // The last step is to output the file

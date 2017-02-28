@@ -88,6 +88,7 @@ void PlotTest() {
   
   bc.SetYAxisLabel("Y Label");
   bc.SetLegendFlag(true);
+  bc.SetLegendVerticalFlag(true);
   
   bc.Draw("File name.pdf");
   bc.buffer.WriteToFile(stderr);
