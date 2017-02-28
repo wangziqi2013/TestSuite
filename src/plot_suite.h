@@ -395,6 +395,8 @@ class BarChart {
   
   // This is the buffer in which we print the pythob script into
   Buffer buffer;
+  // If we also draws the legend then this is the buffer
+  Buffer legend_buffer;
   
   // This is the width of the bar
   // It will be set in SetPosition()
@@ -788,6 +790,7 @@ class BarChart {
     x_label{},
     y_label{},
     buffer{},
+    legend_buffer{},
     bar_width{},
     y_upper_limit{},
     y_lower_limit{},
@@ -937,6 +940,8 @@ class BarChart {
    * Draw() - Draw the dirgram into a given file name
    */
   void Draw(const std::string output_file_name) {
+    buffer.Reset();
+    
     SetPosition();
     
     // Get y axis upper and lower limit
@@ -988,7 +993,8 @@ class BarChart {
    * vertically or aligned horizontally
    */
   void DrawLegend(const std::string &output_file_name, bool vertical=false) {
-    Buffer legend_buffer;
+    // Clear all contents of the buffer
+    legend_buffer.Reset();
     
     legend_buffer.Append(python_import_prologue);
     legend_buffer.Append(python_tex_prologue);
