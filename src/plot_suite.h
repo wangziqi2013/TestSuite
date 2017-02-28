@@ -990,7 +990,11 @@ class BarChart {
   void DrawLegend(const std::string &output_file_name, bool vertical=false) {
     Buffer legend_buffer;
     
+    legend_buffer.Append(python_import_prologue);
+    legend_buffer.Append(python_tex_prologue);
+    
     legend_buffer.Append("import matplotlib.patches as mpatches\n");
+    
     legend_buffer.Append("fig = plot.figure(figsize=(2, 1))\n");
     legend_buffer.Append("patches = []\n");
     legend_buffer.Append("labels = []\n");
