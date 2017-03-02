@@ -1077,6 +1077,9 @@ class LineChart {
   // This is the parameter value for common attributes
   ChartParameter param;
   
+  // This points to the color scheme of the plot
+  Color *color_scheme_p;
+  
   // These two are buffers that are used to print python code
   Buffer buffer;
   Buffer legend_buffer;
@@ -1208,7 +1211,10 @@ class LineChart {
     x_list{},
     y_list_list{},
     line_name_list{},
-    param{default_chart_param} {
+    param{default_chart_param},
+    color_scheme_p{RED_COLOR_SCHEME},
+    buffer{},
+    legend_buffer{} {
     // Initialize python interface
     Py_Initialize();
     
@@ -1336,21 +1342,44 @@ class LineChart {
     // Clear what we have drawn
     buffer.Reset();
     
+    // Print import and tex statements
+    PrintPrologue();
+    
+    // The index is used to address color and line name
+    int index = 0;
+    for(const std::vector<double> &y_list : y_list_list) {
+      buffer.Append("ax.plot(");
+      
+      // Print x and y respectively
+      PrintListDouble(x_list, &buffer);
+      buffer.Append(", ");
+      PrintListDouble(y_list, &buffer);
+      
+      // Then add color specification
+      buffer.Append("color=\"");
+      color_scheme_p[index].AppendToBuffer(&buffer);
+      
+      // Next add label
+      buffer.Printf("\", label=\"%s\")\n", line_name_list[index].c_str());
+      
+      index++;
+    }
+    
+    buffer.Append('\n');
+    
     // Get y axis upper and lower limit
     double y_upper_limit = GetYUpperLimit();
     double y_lower_limit = GetYLowerLimit();
     
-    // Print import and tex statements
-    PrintPrologue();
-    
-    for(const std::vector<double> &y_list : y_list_list) {
-      buffer.Append("ax.plot([");
-      
-       
-    }
-    
     // Then print statement to set Y limit values
     buffer.Printf("ax.set_ylim(%f, %f)\n\n", y_lower_limit, y_upper_limit);
+    
+    // Finish it as a string
+    buffer.Append('\0');
+    
+    
+    
+    return;
   }
      
 };
