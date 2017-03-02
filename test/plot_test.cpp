@@ -49,6 +49,7 @@ void PrintListTest() {
   
   Buffer buffer;
   PrintListDouble(t, &buffer);
+  buffer.Append('\n');
   
   buffer.WriteToFile(stderr);
   
