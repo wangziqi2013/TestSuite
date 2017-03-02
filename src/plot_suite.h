@@ -1127,10 +1127,26 @@ class LineChart {
       }
     }
     
+    // This checks condition (2)
     if(y_count != x_list.size()) {
       assert(false);
-      throw "The number "
-    } 
+      throw "The number of x points does not match the number of y points";
+    }
+    
+    // This checks condition (3)
+    if(y_list_list.size() != line_name_list.size()) {
+      assert(false);
+      throw "The number of names for lines does not match"
+            " the number of x lines"; 
+    }
+    
+    // This checks condition (4)
+    if(y_list_list.size() > MAX_COLOR_COUNT) {
+      assert(false);
+      throw "The number of lines exceeds the maximum number allowed"; 
+    }
+    
+    return;
   }
 
  public:
