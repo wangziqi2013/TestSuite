@@ -1148,6 +1148,59 @@ class LineChart {
     
     return;
   }
+  
+  /*
+   * GetYUpperLimit() - Returns the upper limit of the Y axis
+   *
+   * We compute the maximum value in all line points, and multiply it 
+   * by a constant set in the parameter. The result is rounded up to
+   the nearest .5 and then returned
+   */
+  double GetYUpperLimit() {
+    double max;
+    bool first_time = true;
+    
+    // For every point in every line compute the maximum
+    for(const std::vector<double> &y_list : y_list_list) {
+      for(double data : y_list) {
+        if(first_time == true) {
+          first_time = false;
+          max = data;
+        } else {
+          if(data > max) {
+            max = data;
+          }
+        }
+      }
+    }
+    
+    // Need to make it a little bit larger
+    max *= param.y_limit_ratio;
+    
+    // And then round to the nearest 0.5
+    return RoundUpToPoint5(max);
+  }
+  
+  /*
+   * GetYLowerLimit() - Returns the lower limit of the Y axis
+   *
+   * If all numbers are positive, then the return value is always 0.0
+   * Otherwise the return value is the minimum negative
+   */
+  double GetYLowerLimit() {
+    double min = 0.0L;
+    
+    for(const std::vector<double> &y_list : y_list_list) {
+      for(double data : y_list) {
+        if(data < min) {
+          min = data; 
+        }
+      }
+    }
+    
+    // Most likely be 0
+    return min;
+  }
 
  public:
   /*
