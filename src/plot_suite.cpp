@@ -61,6 +61,27 @@ ChartParameter default_chart_param{
   //"best"
 };
 
+// import statements
+const char *PYTHON_IMPORT_PROLOGUE = \
+  "import sys\n"
+  "import matplotlib as mpl\n"
+  "import matplotlib.pyplot as plot\n"
+  "import matplotlib.ticker as ticker\n"
+  "import numpy\n\n";
+
+// Latex statements
+const char *PYTHON_TEX_PROLOGUE = \
+  "mpl.rcParams['ps.useafm'] = True\n"
+  "mpl.rcParams['pdf.use14corefonts'] = True\n"
+  "mpl.rcParams['text.usetex'] = True\n"
+  "mpl.rcParams['text.latex.preamble'] = [\n"
+  "  r'\\usepackage{siunitx}',\n"
+  "  r'\\sisetup{detect-all}',\n"
+  "  r'\\usepackage{helvet}',\n"
+  "  r'\\usepackage{sansmath}',\n"
+  "  r'\\sansmath'\n"
+  "]\n\n";
+
 /*
  * RoundUpToPoint5() - Round up a float number to the nearest 0.5
  */

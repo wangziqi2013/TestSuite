@@ -358,6 +358,12 @@ class ChartParameter {
 extern ChartParameter default_chart_param;
 extern const size_t MAX_COLOR_COUNT;
 
+// import statements
+extern const char *PYTHON_IMPORT_PROLOGUE;
+  
+// Latex statements
+extern const char *PYTHON_TEX_PROLOGUE;
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -574,33 +580,12 @@ class BarChart {
     return max_size; 
   }
   
-  // import statements
-  static constexpr const char *python_import_prologue = \
-    "import sys\n"
-    "import matplotlib as mpl\n"
-    "import matplotlib.pyplot as plot\n"
-    "import matplotlib.ticker as ticker\n"
-    "import numpy\n\n";
-  
-  // Latex statements
-  static constexpr const char *python_tex_prologue = \
-    "mpl.rcParams['ps.useafm'] = True\n"
-    "mpl.rcParams['pdf.use14corefonts'] = True\n"
-    "mpl.rcParams['text.usetex'] = True\n"
-    "mpl.rcParams['text.latex.preamble'] = [\n"
-    "  r'\\usepackage{siunitx}',\n"
-    "  r'\\sisetup{detect-all}',\n"
-    "  r'\\usepackage{helvet}',\n"
-    "  r'\\usepackage{sansmath}',\n"
-    "  r'\\sansmath'\n"
-    "]\n\n";
-  
   /*
    * PrintPrologue() - Prints the prologue of the drawing script
    */
   void PrintPrologue() {
-    buffer.Append(python_import_prologue);
-    buffer.Append(python_tex_prologue);
+    buffer.Append(PYTHON_IMPORT_PROLOGUE);
+    buffer.Append(PYTHON_TEX_PROLOGUE);
     
     return;
   }
@@ -1008,8 +993,8 @@ class BarChart {
     // Clear all contents of the buffer
     legend_buffer.Reset();
     
-    legend_buffer.Append(python_import_prologue);
-    legend_buffer.Append(python_tex_prologue);
+    legend_buffer.Append(PYTHON_IMPORT_PROLOGUE);
+    legend_buffer.Append(PYTHON_TEX_PROLOGUE);
     
     legend_buffer.Append("import matplotlib.patches as mpatches\n");
     
@@ -1329,7 +1314,24 @@ class LineChart {
     return;
   }
   
-  
+  /*
+   * Draw() - Draw the line plot using data
+   */
+  void Draw(const std::string &output_file_name) {
+    // This checks whether the plot is consistent
+    Verify();
+    // Clear what we have drawn
+    buffer.Reset();
+    
+    // Get y axis upper and lower limit
+    double y_upper_limit = GetYUpperLimit();
+    double y_lower_limit = GetYLowerLimit();
+    
+    //PrintPrologue();
+    
+    // Then print statement to set Y limit values
+    buffer.Printf("ax.set_ylim(%f, %f)\n\n", y_lower_limit, y_upper_limit);
+  }
      
 };
 
