@@ -9,6 +9,9 @@
 #include "buffer.h"
 #include "test_suite.h"
 
+// Round up a double to the nearest 0.5
+extern double RoundUpToPoint5(double num);
+
 /*
  * class Color - RGB color scheme
  */
@@ -444,31 +447,6 @@ class BarChart {
     // Then divide width by the bar count 
     return param.width / static_cast<double>(bar_count); 
   } 
-  
-  /*
-   * RoundUpToPoint5() - Round up a float number to the nearest 0.5
-   */
-  static double RoundUpToPoint5(double num) {
-    // First make it 10 times larger such that we could perform
-    // integer divisio on the number
-    num *= 10L;
-    size_t temp = static_cast<size_t>(num);
-    
-    // If the number is, say, 15.55, then 155.5 will be converted to
-    // 155, and the result is incorrect
-    if(static_cast<double>(temp) < num) {
-      temp++; 
-    }
-    
-    // If it is not already a multiple of 5, we need to round it up
-    // to the nearest multiple of 5
-    if(temp % 5 != 0) {
-      temp = ((temp + 4) / 5) * 5;
-    }
-    
-    // And then convert it back
-    return static_cast<double>(temp) / 10L;
-  }
   
   /*
    * GetYLowerLimit() - Returns the lower limit of Y
@@ -1111,6 +1089,50 @@ class LineChart {
   // This is the parameter value for common attributes
   ChartParameter param;
   
+  // These two are buffers that are used to print python code
+  Buffer buffer;
+  Buffer legend_buffer;
+
+ private:
+   
+  /*
+   * Verify() - Verifies invariants
+   *
+   * This function checks the following conditions:
+   *   (1) All Y value lists need to have the same length
+   *   (2) All Y value lists need to have the same length as the X value list
+   *   (3) The numbre of Y value lists must equal the number of 
+   *       line names 
+   *   (4) The numbre of Y value lists must not exceed the maximum number 
+   *       of colors allowed
+   *   (5) There must be at least one Y value list
+   */
+  void Verify() {
+    // This checks condition (5)
+    if(y_list_list.size() == 0UL) {
+      assert(false);
+      throw "There must be at least one line in the plot"; 
+    }
+    
+    // Otherwise the length of the first list is the one we use
+    // as the standard for checking other lists
+    size_t y_count = y_list_list[0].size();
+    
+    // For each y list check its length against the expected length
+    for(const std::vector<double> &y_list : y_list_list) {
+      // This checks condition (1)
+      if(y_list.size() != y_count) {
+        assert(false);
+        throw "The numbre of points in each line must be equal";
+      }
+    }
+    
+    if(y_count != x_list.size()) {
+      assert(false);
+      throw "The number "
+    } 
+  }
+
  public:
   /*
    * LineChart() - Draw line chart using matplotlib
@@ -1237,6 +1259,8 @@ class LineChart {
     
     return;
   }
+  
+  
      
 };
 
