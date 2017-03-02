@@ -11,6 +11,9 @@
 
 // Round up a double to the nearest 0.5
 extern double RoundUpToPoint5(double num);
+// This prints a list of doubles into a buffer in python list format
+extern void PrintListDouble(const std::vector<double> data_list, 
+                            Buffer *buffer_p);
 
 /*
  * class Color - RGB color scheme
@@ -1186,6 +1189,16 @@ class LineChart {
     // Most likely be 0
     return min;
   }
+  
+  /*
+   * PrintPrologue() - Prints import and tex prologue
+   */
+  void PrintPrologue() {
+    buffer.Append(PYTHON_IMPORT_PROLOGUE);
+    buffer.Append(PYTHON_TEX_PROLOGUE);
+    
+    return;
+  }
 
  public:
   /*
@@ -1327,7 +1340,14 @@ class LineChart {
     double y_upper_limit = GetYUpperLimit();
     double y_lower_limit = GetYLowerLimit();
     
-    //PrintPrologue();
+    // Print import and tex statements
+    PrintPrologue();
+    
+    for(const std::vector<double> &y_list : y_list_list) {
+      buffer.Append("ax.plot([");
+      
+       
+    }
     
     // Then print statement to set Y limit values
     buffer.Printf("ax.set_ylim(%f, %f)\n\n", y_lower_limit, y_upper_limit);

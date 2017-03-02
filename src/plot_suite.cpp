@@ -106,3 +106,18 @@ double RoundUpToPoint5(double num) {
   // And then convert it back
   return static_cast<double>(temp) / 10L;
 }
+
+/*
+ * PrintListDouble() - Prints a list of doubles in Python list format
+ */
+void PrintListDouble(const std::vector<double> data_list, 
+                     Buffer *buffer_p) {
+  buffer_p->Append('[');
+  for(double data : data_list) {
+    buffer_p->Printf("%f, ", data); 
+  }
+  
+  buffer_p->Append(']');
+  
+  return;
+}
