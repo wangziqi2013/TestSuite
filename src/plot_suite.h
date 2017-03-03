@@ -1420,7 +1420,8 @@ class LineChart {
       color_scheme_p[index].AppendToBuffer(&buffer);
       
       // Next add label
-      buffer.Printf("\", label=\"%s\")\n", line_name_list[index].c_str());
+      buffer.Printf("\", label=\"%s\", linewidth=2)\n", 
+                    line_name_list[index].c_str());
       
       index++;
     }
