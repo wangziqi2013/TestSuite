@@ -14,6 +14,36 @@ extern double RoundUpToPoint5(double num);
 // This prints a list of doubles into a buffer in python list format
 extern void PrintListDouble(const std::vector<double> data_list, 
                             Buffer *buffer_p);
+  
+/*
+ * class PythonInterpreter - The class for constructing and destructing
+ *                           the python interpreter states
+ *
+ * The reason that we need an empty class to represent the interpreter is that
+ * we could not call python initialization routine and termiantion routine 
+ * for more than once in the entire duration of this process, because otherwise
+ * the second initialization would lead to segmentation fault.
+ */                          
+class PythonInterpreter {
+  // Everything was made private such that the user could not
+  // access it
+ private:
+  /*
+   * Constructor
+   */
+  PythonInterpreter() {
+    // Initialize python before entering main() function
+    Py_Initialize();
+    
+    // Register finalize to be called at exit
+    atexit(Py_Finalize);
+    
+    return;
+  }
+  
+  // Singleton
+  static PythonInterpreter *p;
+};
 
 /*
  * class Color - RGB color scheme
@@ -802,22 +832,13 @@ class BarChart {
     x_axis_label{},
     y_axis_label{},
     draw_legend_flag{true},
-    legend_vertical_flag{true} {
-    // Initialize the python environment
-    Py_Initialize();
-    
-    return;  
-  }
+    legend_vertical_flag{true} 
+  {}
   
   /*
    * Destructor
    */
-  ~BarChart() {
-    // Destroy the Python environment
-    Py_Finalize();
-    
-    return;
-  } 
+  ~BarChart() {}
   
   /*
    * AppendBarGroup() - Appends a new bar group into the chart
@@ -1238,22 +1259,13 @@ class LineChart {
     param{default_chart_param},
     color_scheme_p{RED_COLOR_SCHEME},
     buffer{},
-    legend_buffer{} {
-    // Initialize python interface
-    Py_Initialize();
-    
-    return;  
-  }
+    legend_buffer{} 
+  {}
   
   /*
    * Destructor
    */
-  ~LineChart() {
-    // Destroy the Python environment
-    Py_Finalize();
-    
-    return;
-  } 
+  ~LineChart() {}
   
   /*
    * AppendXValueList() - Adding values into the x axis data points
@@ -1449,7 +1461,7 @@ class LineChart {
     buffer.Printf("ax.set_ylim(%f, %f)\n\n", y_lower_limit, y_upper_limit);
     
     // Specify output file name
-    buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')", 
+    buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')\n", 
                   output_file_name.c_str());
     
     // Finish it as a string

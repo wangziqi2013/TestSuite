@@ -112,7 +112,9 @@ void BarPlotTest() {
   bc.SetLegendVerticalFlag(true);
   
   bc.Draw("BarChart.pdf");
+  
   dbg_printf("Finished plotting bar chart\n");
+  
   bc.DrawLegend("BarChartLegend.pdf");
   
   //bc.buffer.WriteToFile(stderr);
@@ -124,6 +126,8 @@ void BarPlotTest() {
  * LinePlotTest() - Tests whether we could plot line charts
  */
 void LinePlotTest() {
+  _PrintTestName();
+  
   LineChart lc{};
   
   lc.AppendXValueList<double>({1,5,10,15,20,25,30});

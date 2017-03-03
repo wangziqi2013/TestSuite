@@ -1,6 +1,8 @@
 
 #include "plot_suite.h"
 
+PythonInterpreter *PythonInterpreter::p = new PythonInterpreter{};
+
 // This is the maximum number of bars in a group
 const size_t MAX_COLOR_COUNT = 9;
 
@@ -66,8 +68,7 @@ const char *PYTHON_IMPORT_PROLOGUE = \
   "import sys\n"
   "import matplotlib as mpl\n"
   "import matplotlib.pyplot as plot\n"
-  "import matplotlib.ticker as ticker\n"
-  "import numpy\n\n";
+  "import matplotlib.ticker as ticker\n\n";
 
 // Latex statements
 const char *PYTHON_TEX_PROLOGUE = \
