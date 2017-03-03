@@ -1074,6 +1074,14 @@ class LineChart {
   // This is a list of names for lines in the plot
   std::vector<std::string> line_name_list;
   
+  // The following two labels. And they will be ignored if they
+  // are empty strings
+  
+  // This is the label that will be displayed on the X axis
+  std::string x_label;
+  // This is the label that will be displayed on the Y axis
+  std::string y_label;
+  
   // This is the parameter value for common attributes
   ChartParameter param;
   
@@ -1202,6 +1210,18 @@ class LineChart {
     
     return;
   }
+  
+  /*
+   * ExecutePython() - Executes python code stored in a char array
+   *
+   * Note that the argumment must be a valid C-string (i.e. terminated 
+   * by '\0') and the executor environment must have already been initialized
+   */
+  static void ExecutePython(const char *data_p) {
+    PyRun_SimpleString(data_p);
+     
+    return;
+  }
 
  public:
   /*
@@ -1211,6 +1231,8 @@ class LineChart {
     x_list{},
     y_list_list{},
     line_name_list{},
+    x_label{},
+    y_label{},
     param{default_chart_param},
     color_scheme_p{RED_COLOR_SCHEME},
     buffer{},
@@ -1334,6 +1356,24 @@ class LineChart {
   }
   
   /*
+   * SetYAxisLabel() - Sets the label for Y axis
+   */
+  inline void SetYAxisLabel(const std::string &s) {
+    y_label = s;
+    
+    return; 
+  }
+  
+  /*
+   * SetXAxisLabel() - Sets the label for X axis
+   */
+  inline void SetXAxisLabel(const std::string &s) {
+    x_label = s;
+    
+    return;
+  }
+  
+  /*
    * Draw() - Draw the line plot using data
    */
   void Draw(const std::string &output_file_name) {
@@ -1371,13 +1411,20 @@ class LineChart {
     double y_upper_limit = GetYUpperLimit();
     double y_lower_limit = GetYLowerLimit();
     
+    //ax.set_ylabel(Y_LABEL, fontsize=Y_LABEL_FONT_SIZE, weight='bold')
+    
     // Then print statement to set Y limit values
     buffer.Printf("ax.set_ylim(%f, %f)\n\n", y_lower_limit, y_upper_limit);
+    
+    // Specify output file name
+    buffer.Printf("plot.savefig(%s, bbox_inches='tight')", 
+                  output_file_name.c_str());
     
     // Finish it as a string
     buffer.Append('\0');
     
-    
+    // At last execute the script
+    ExecutePython(buffer.GetCharData());
     
     return;
   }
