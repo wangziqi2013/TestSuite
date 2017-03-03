@@ -1407,11 +1407,35 @@ class LineChart {
     
     buffer.Append('\n');
     
+    // Set x label if it is not empty
+    if(x_label.size() != 0UL) {
+      buffer.Printf("ax.set_xlabel(%s, fontsize=%lu, weight='bold')\n", 
+                    x_label.c_str(), 
+                    param.x_font_size);
+    }
+    
+    // Set y label if it is not empty
+    if(y_label.size() != 0UL) {
+      buffer.Printf("ax.set_ylabel(%s, fontsize=%lu, weight='bold')\n", 
+                    y_label.c_str(), 
+                    param.y_font_size);
+    }
+    
+    buffer.Append('\n');
+    
+    // Then set tick size for X and Y axis
+    
+    buffer.Append("for label in ax.get_xticklabels():\n");
+    buffer.Printf("    label.set_fontsize(%lu)\n\n", 
+                  param.x_tick_font_size);
+    
+    buffer.Append("for label in ax.get_yticklabels():\n");
+    buffer.Printf("    label.set_fontsize(%lu)\n\n", 
+                  param.y_tick_font_size);
+    
     // Get y axis upper and lower limit
     double y_upper_limit = GetYUpperLimit();
     double y_lower_limit = GetYLowerLimit();
-    
-    //ax.set_ylabel(Y_LABEL, fontsize=Y_LABEL_FONT_SIZE, weight='bold')
     
     // Then print statement to set Y limit values
     buffer.Printf("ax.set_ylim(%f, %f)\n\n", y_lower_limit, y_upper_limit);
