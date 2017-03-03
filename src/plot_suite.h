@@ -1114,6 +1114,13 @@ class LineChart {
   // These two are buffers that are used to print python code
   Buffer buffer;
   Buffer legend_buffer;
+  
+  // This flag determines whether we draw legend
+  bool draw_legend_flag;
+  
+  // This flag determines whether legends are stacked together in the
+  // vertical direction
+  bool legend_vertical_flag;
 
  private:
    
@@ -1259,7 +1266,9 @@ class LineChart {
     param{default_chart_param},
     color_scheme_p{RED_COLOR_SCHEME},
     buffer{},
-    legend_buffer{} 
+    legend_buffer{},
+    draw_legend_flag{true},
+    legend_vertical_flag{true} 
   {}
   
   /*
@@ -1388,6 +1397,24 @@ class LineChart {
   }
   
   /*
+   * SetLegendFlag() - Sets the draw_legend_flag member
+   */
+  inline void SetLegendFlag(bool value) {
+    draw_legend_flag = value;
+    
+    return;
+  }
+  
+  /*
+   * SetLegendVerticalFlag() - Sets how legends are drawn
+   */
+  inline void SetLegendVerticalFlag(bool value) {
+    legend_vertical_flag = value;
+    
+    return;
+  }
+  
+  /*
    * Draw() - Draw the line plot using data
    */
   void Draw(const std::string &output_file_name) {
@@ -1460,6 +1487,21 @@ class LineChart {
     
     // Then print statement to set Y limit values
     buffer.Printf("ax.set_ylim(%f, %f)\n\n", y_lower_limit, y_upper_limit);
+    
+    // The below code is copied from class BarChart
+    if(draw_legend_flag == true) {
+      int legend_col_num = 1;
+      if(legend_vertical_flag == false) {
+        // We use the size of line names as the number of lines
+        legend_col_num = line_name_list.size();
+      }
+      
+      // Draw the legends
+      buffer.Printf("ax.legend(loc=\"%s\", prop={'size':%lu}, ncol=%d)\n\n",
+                    param.legend_position.c_str(),
+                    param.legend_font_size,
+                    legend_col_num);
+    }
     
     // Specify output file name
     buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')\n", 

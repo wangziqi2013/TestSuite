@@ -142,6 +142,9 @@ void LinePlotTest() {
   lc.SetYAxisLabel("Y Label");
   lc.SetXAxisLabel("X Label");
   
+  lc.SetLegendFlag(true);
+  lc.SetLegendVerticalFlag(false);
+  
   lc.Draw("LineChart.pdf");
   
   //lc.buffer.WriteToFile(stderr);
