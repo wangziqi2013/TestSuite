@@ -1063,6 +1063,8 @@ class BarChart {
  * class LineChart - This class represents a line chart 
  */
 class LineChart {
+  void LinePlotTest();
+  friend void LinePlotTest();
  private:
   // This is a list of x values
   std::vector<double> x_list;
@@ -1254,15 +1256,15 @@ class LineChart {
   } 
   
   /*
-   * AppendXValues() - Adding values into the x axis data points
+   * AppendXValueList() - Adding values into the x axis data points
    */
   template <typename T>
-  void AppendXValues(size_t count, T *data_p) {
+  void AppendXValueList(size_t count, T *data_p) {
     // Reserve enough space first to reduce memory allocation
     x_list.reserve(count + x_list.size());
     
     // Then do an element copy
-    for(int i = 0;i < count;i++) {
+    for(size_t i = 0;i < count;i++) {
       x_list.push_back(static_cast<double>(data_p[i]));
     }
     
@@ -1270,11 +1272,11 @@ class LineChart {
   }
   
   /*
-   * AppendXValues() - Adding values in a vector
+   * AppendXValueList() - Adding X values in a vector
    */
   template <typename T>
-  inline void AppendXValues(const std::vector<T> data_list) {
-    AppendXValues(data_list.size(), &data_list[0]);
+  inline void AppendXValueList(const std::vector<T> data_list) {
+    AppendXValueList(data_list.size(), &data_list[0]);
     
     return;
   }
@@ -1385,6 +1387,12 @@ class LineChart {
     // Print import and tex statements
     PrintPrologue();
     
+    // Create the figure and axis
+    buffer.Printf("fig = plot.figure(figsize=(%f, %f))\n", 
+                  param.width, 
+                  param.height);
+    buffer.Append("ax = fig.add_subplot(111)\n\n");
+    
     // The index is used to address color and line name
     int index = 0;
     for(const std::vector<double> &y_list : y_list_list) {
@@ -1396,7 +1404,7 @@ class LineChart {
       PrintListDouble(y_list, &buffer);
       
       // Then add color specification
-      buffer.Append("color=\"");
+      buffer.Append(", color=\"");
       color_scheme_p[index].AppendToBuffer(&buffer);
       
       // Next add label
@@ -1409,14 +1417,14 @@ class LineChart {
     
     // Set x label if it is not empty
     if(x_label.size() != 0UL) {
-      buffer.Printf("ax.set_xlabel(%s, fontsize=%lu, weight='bold')\n", 
+      buffer.Printf("ax.set_xlabel(\"%s\", fontsize=%lu, weight='bold')\n", 
                     x_label.c_str(), 
                     param.x_font_size);
     }
     
     // Set y label if it is not empty
     if(y_label.size() != 0UL) {
-      buffer.Printf("ax.set_ylabel(%s, fontsize=%lu, weight='bold')\n", 
+      buffer.Printf("ax.set_ylabel(\"%s\", fontsize=%lu, weight='bold')\n", 
                     y_label.c_str(), 
                     param.y_font_size);
     }
@@ -1441,11 +1449,13 @@ class LineChart {
     buffer.Printf("ax.set_ylim(%f, %f)\n\n", y_lower_limit, y_upper_limit);
     
     // Specify output file name
-    buffer.Printf("plot.savefig(%s, bbox_inches='tight')", 
+    buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')", 
                   output_file_name.c_str());
     
     // Finish it as a string
     buffer.Append('\0');
+    
+    buffer.WriteToFile(stderr);
     
     // At last execute the script
     ExecutePython(buffer.GetCharData());

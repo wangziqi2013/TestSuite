@@ -81,9 +81,9 @@ void RoundUpTest() {
 }
 
 /*
- * PlotTest() - Check whether we could plot using the class
+ * BarPlotTest() - Check whether we could plot bar chart using the class
  */
-void PlotTest() {
+void BarPlotTest() {
   BarChart bc;
   
   bc.AppendBarGroup("Group 1");
@@ -111,11 +111,36 @@ void PlotTest() {
   bc.SetLegendFlag(true);
   bc.SetLegendVerticalFlag(true);
   
-  bc.Draw("File name.pdf");
+  bc.Draw("BarChart.pdf");
   dbg_printf("Finished plotting bar chart\n");
-  bc.DrawLegend("File name legend.pdf");
+  bc.DrawLegend("BarChartLegend.pdf");
   
   //bc.buffer.WriteToFile(stderr);
+  
+  return;
+}
+
+/*
+ * LinePlotTest() - Tests whether we could plot line charts
+ */
+void LinePlotTest() {
+  LineChart lc{};
+  
+  lc.AppendXValueList<double>({1,5,10,15,20,25,30});
+  lc.AppendYValueList<double>({1,2,3,4,5,6,7});
+  lc.AppendYValueList<double>({1,2,4,8,16,32,64});
+  lc.AppendYValueList<double>({1, 1.5, 2.4, 3.9, 5.0, 7.8, 9.5});
+  
+  lc.AppendLineName("Line 1");
+  lc.AppendLineName("Line 2");
+  lc.AppendLineName("Line 3");
+  
+  lc.SetYAxisLabel("Y Label");
+  lc.SetXAxisLabel("X Label");
+  
+  lc.Draw("LineChart.pdf");
+  
+  //lc.buffer.WriteToFile(stderr);
   
   return;
 }
@@ -124,7 +149,8 @@ int main() {
   ColorTest();
   PrintListTest();
   RoundUpTest();
-  PlotTest();
+  BarPlotTest();
+  LinePlotTest();
   
   return 0; 
 } 
