@@ -211,9 +211,9 @@ void PlotBwTreePreallocation() {
   // Memory	Preallocation
 	BarChart bc4{};
 	
-	bc4.AppendBarGroup<double>("RO", {1.055, 1.115});
-  bc4.AppendBarGroup<double>("RU", {1.580, 1.615});
-  bc4.AppendBarGroup<double>("SI", {3.195, 3.270});
+	bc4.AppendBarGroup<double>("Mono", {1.055, 1.115});
+  bc4.AppendBarGroup<double>("Rand", {1.580, 1.615});
+  bc4.AppendBarGroup<double>("Email", {3.195, 3.270});
   
   bc4.AppendBarName("Independently Alloc'ed");
 	bc4.AppendBarName("Pre-Alloc'ed");
@@ -249,7 +249,7 @@ void PlotBwTreeMicroIndex() {
 	
 	///////////////////////////////////////////////////////////////////
 
-  // Mono	Preallocation
+  // Mono	Microindex
 	BarChart bc2{};
 	
 	bc2.AppendBarGroup<double>("IO", {0.77, 0.94});
@@ -266,7 +266,7 @@ void PlotBwTreeMicroIndex() {
 	
 	///////////////////////////////////////////////////////////////////
 
-  // Email Preallocation
+  // Email Microindex
 	BarChart bc3{};
 	
 	bc3.AppendBarGroup<double>("IO", {0.50, 0.61});
@@ -283,12 +283,12 @@ void PlotBwTreeMicroIndex() {
 	
 	///////////////////////////////////////////////////////////////////
 
-  // Memory	Preallocation
+  // Memory Microindex
 	BarChart bc4{};
 	
-	bc4.AppendBarGroup<double>("RO", {1.060, 1.115});
-  bc4.AppendBarGroup<double>("RU", {1.590, 1.615});
-  bc4.AppendBarGroup<double>("SI", {3.195, 3.270});
+	bc4.AppendBarGroup<double>("Mono", {1.060, 1.115});
+  bc4.AppendBarGroup<double>("Rand", {1.590, 1.615});
+  bc4.AppendBarGroup<double>("Email", {3.195, 3.270});
   
   bc4.AppendBarName("Independently Alloc'ed");
 	bc4.AppendBarName("Pre-Alloc'ed");
@@ -365,6 +365,81 @@ void PlotBwTreeGC() {
   return;
 }
 
+/*
+ * PlotBwTreeCompare() - Plots data used in BwTree paper
+ */
+void PlotBwTreeCompare() {
+  BarChart bc1{};
+  
+  bc1.AppendBarGroup<double>("IO", {2.94, 3.15});
+  bc1.AppendBarGroup<double>("RO", {4.37, 2.49});
+  bc1.AppendBarGroup<double>("RU", {3.97, 3.27});
+  bc1.AppendBarGroup<double>("SI", {0.06, 0.81});
+  
+  bc1.AppendBarName("MassTree");
+	bc1.AppendBarName("OpenBwTree");
+	
+	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+
+	bc1.SetLegendFlag(false);
+
+	bc1.Draw("compare-mono.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Rand	Compare
+	BarChart bc2{};
+	
+	bc2.AppendBarGroup<double>("IO", {1.94, 0.94});
+  bc2.AppendBarGroup<double>("RO", {4.16, 2.46});
+  bc2.AppendBarGroup<double>("RU", {3.65, 3.07});
+  bc2.AppendBarGroup<double>("SI", {0.06, 0.64});
+  
+  bc2.AppendBarName("MassTree");
+	bc2.AppendBarName("OpenBwTree");
+
+	bc2.SetLegendFlag(false);
+
+	bc2.Draw("compare-rand.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Email compare
+	BarChart bc3{};
+	
+	bc3.AppendBarGroup<double>("IO", {1.33, 0.61});
+  bc3.AppendBarGroup<double>("RO", {3.61, 1.42});
+  bc3.AppendBarGroup<double>("RU", {3.36, 1.55});
+  bc3.AppendBarGroup<double>("SI", {0.05, 0.45});
+  
+  bc3.AppendBarName("MassTree");
+	bc3.AppendBarName("OpenBwTree");
+	
+	bc3.SetLegendFlag(false);
+
+	bc3.Draw("compare-email.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Memory	Compare
+	BarChart bc4{};
+	
+	bc4.AppendBarGroup<double>("Mono", {2.558, 1.115});
+  bc4.AppendBarGroup<double>("Rand", {2.728, 1.615});
+  bc4.AppendBarGroup<double>("Email", {6.733, 3.270});
+  
+  bc4.AppendBarName("Independently Alloc'ed");
+	bc4.AppendBarName("Pre-Alloc'ed");
+
+  bc4.SetYAxisLabel("Memory Footprint (GB)");
+
+	bc4.SetLegendFlag(false);
+
+	bc4.Draw("compare-memory.pdf");
+	
+	return;
+}
+
 int main() {
 	ColorTest();
 	PrintListTest();
@@ -375,6 +450,7 @@ int main() {
 	PlotBwTreePreallocation();
   PlotBwTreeMicroIndex();
   PlotBwTreeGC();
+  PlotBwTreeCompare();
   
 	return 0;
 }
