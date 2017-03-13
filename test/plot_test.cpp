@@ -302,6 +302,68 @@ void PlotBwTreeMicroIndex() {
 	return;
 }
 
+/*
+ * PlotBwTreeGC() - Plot Bwtree GC result
+ */
+void PlotBwTreeGC() {
+  LineChart lc1{};
+  
+  lc1.AppendXValueList<double>({1,5,10,15,20,25,30,35,40});
+  
+	lc1.AppendYValueList<double>({2.04, 8.04, 9.19, 10.61, 11.96, 11.42, 11.42, 12.91, 13.67});
+	lc1.AppendYValueList<double>({2.04, 10.62, 17.56, 26.82, 34.39, 42.5, 51.34, 52.82, 59.58});
+
+	lc1.AppendLineName("Centralized GC");
+	lc1.AppendLineName("Distributed GC");
+
+	lc1.SetYAxisLabel("Throughput (Million Ops/Sec)");
+
+	lc1.SetLegendFlag(false);
+	lc1.SetLegendVerticalFlag(false);
+
+	lc1.Draw("gc-mono.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+	
+	// GC random
+	LineChart lc2{};
+  
+  lc2.AppendXValueList<double>({1,5,10,15,20,25,30,35,40});
+  
+	lc2.AppendYValueList<double>({1.1, 4.76, 7.38, 9.05, 9.81, 10.56, 11.86, 12.37, 14.6});
+	lc2.AppendYValueList<double>({1.1, 5.17, 10.09, 14.71, 19.43, 22.7, 25.47, 28, 32.78});
+
+	lc2.AppendLineName("Centralized GC");
+	lc2.AppendLineName("Distributed GC");
+
+	lc2.SetLegendFlag(false);
+	lc2.SetLegendVerticalFlag(false);
+
+	lc2.Draw("gc-rand.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+	
+	// GC email
+	LineChart lc3{};
+  
+  lc3.AppendXValueList<double>({1,5,10,15,20,25,30,35,40});
+  
+  lc3.AppendYValueList<double>({1.1, 3.76, 5.38, 7.05, 9.81, 10.41, 11.72, 12.26, 14.5});
+  lc3.AppendYValueList<double>({0.92, 4.57, 8.74, 12.20, 16.09, 19.53, 22.98, 25.12, 29.01});
+
+	lc3.AppendLineName("Centralized GC");
+	lc3.AppendLineName("Distributed GC");
+
+	lc3.SetLegendFlag(false);
+	lc3.SetLegendVerticalFlag(false);
+
+	lc3.Draw("gc-email.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+	// GC memory
+  
+  return;
+}
 
 int main() {
 	ColorTest();
@@ -312,6 +374,7 @@ int main() {
 	
 	PlotBwTreePreallocation();
   PlotBwTreeMicroIndex();
+  PlotBwTreeGC();
   
 	return 0;
 }
