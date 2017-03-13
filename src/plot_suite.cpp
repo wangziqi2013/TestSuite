@@ -7,7 +7,7 @@ PythonInterpreter *PythonInterpreter::p = new PythonInterpreter{};
 const size_t MAX_COLOR_COUNT = 9;
 
 Color RED_COLOR_SCHEME[] = {
-  Color{"#fff7ec"}, 
+  //Color{"#fff7ec"}, 
   Color{"#fee8c8"}, 
   Color{"#fdd49e"}, 
   Color{"#fdbb84"}, 
@@ -19,7 +19,7 @@ Color RED_COLOR_SCHEME[] = {
 };
 
 Color BLUE_COLOR_SCHEME[] = {
-  Color{"#fff7fb"}, 
+  //Color{"#fff7fb"}, 
   Color{"#ece7f2"}, 
   Color{"#d0d1e6"}, 
   Color{"#a6bddb"}, 

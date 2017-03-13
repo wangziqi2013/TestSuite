@@ -214,7 +214,7 @@ class BarGroup {
    * of any type, and they will be converted to double type when we append them
    */
   template <typename T>
-  void Append(size_t count, T *data_p) {
+  void Append(size_t count, const T *data_p) {
     // Convert every element to double and then push back to
     // the data vector
     for(size_t i = 0;i < count;i++) {
@@ -687,7 +687,7 @@ class BarChart {
           // This is the drawing statement for numeric labels over each bar
           buffer.Printf("ax.text(rect_list[%d].get_x() + "
                         "rect_list[%d].get_width() / 2, %f, \"%.2f\","
-                        " ha='center', va='bottom')\n", 
+                        " ha='center', va='bottom', rotation='vertical')\n", 
                         j, j, bg.GetDataList()[i], bg.GetDataList()[i]);
           
           j++;
@@ -849,7 +849,7 @@ class BarChart {
   template <typename T> 
   void AppendBarGroup(const std::string &x_tick, 
                       size_t data_count,
-                      T *data_p) {
+                      const T *data_p) {
     // Construct a bg object at the back of the current bg list
     group_list.emplace_back(x_tick);
     
@@ -1280,7 +1280,7 @@ class LineChart {
    * AppendXValueList() - Adding values into the x axis data points
    */
   template <typename T>
-  void AppendXValueList(size_t count, T *data_p) {
+  void AppendXValueList(size_t count, const T *data_p) {
     // Reserve enough space first to reduce memory allocation
     x_list.reserve(count + x_list.size());
     
@@ -1296,7 +1296,7 @@ class LineChart {
    * AppendXValueList() - Adding X values in a vector
    */
   template <typename T>
-  inline void AppendXValueList(const std::vector<T> data_list) {
+  inline void AppendXValueList(const std::vector<T> &data_list) {
     AppendXValueList(data_list.size(), &data_list[0]);
     
     return;
@@ -1517,7 +1517,13 @@ class LineChart {
     
     return;
   }
-     
+  
+  /*
+   * DrawLegend() - Draws the legend only and output it to a file
+   */
+  void DrawLegend(const std::string &file_name) {
+    
+  }
 };
 
 #endif
