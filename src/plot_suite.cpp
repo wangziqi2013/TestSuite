@@ -30,6 +30,11 @@ Color BLUE_COLOR_SCHEME[] = {
   Color{"#023858"},
 };
 
+// This is the marker we use for line plots
+char MARKER_SCHEME[] = {
+  'o', 'x', 'v', '*', '+', '>', '^',
+};
+
 ChartParameter default_chart_param{
   // Width 
   8.0L,   

@@ -160,6 +160,9 @@ class Color {
 extern Color RED_COLOR_SCHEME[];
 extern Color BLUE_COLOR_SCHEME[];
 
+// This is the predefined marker scheme for line plots
+extern char MARKER_SCHEME[];
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -687,8 +690,13 @@ class BarChart {
           // This is the drawing statement for numeric labels over each bar
           buffer.Printf("ax.text(rect_list[%d].get_x() + "
                         "rect_list[%d].get_width() / 2, %f, \"%.2f\","
-                        " ha='center', va='bottom', rotation='vertical')\n", 
-                        j, j, bg.GetDataList()[i], bg.GetDataList()[i]);
+                        " ha='center', va='bottom', rotation='vertical',"
+                        " fontsize=%d)\n", 
+                        j, 
+                        j, 
+                        bg.GetDataList()[i], 
+                        bg.GetDataList()[i],
+                        param.y_tick_font_size);
           
           j++;
         }
@@ -1447,8 +1455,9 @@ class LineChart {
       color_scheme_p[index].AppendToBuffer(&buffer);
       
       // Next add label
-      buffer.Printf("\", label=\"%s\", linewidth=2)\n", 
-                    line_name_list[index].c_str());
+      buffer.Printf("\", label=\"%s\", linewidth=2, marker='%c')\n", 
+                    line_name_list[index].c_str(), 
+                    MARKER_SCHEME[index]);
       
       index++;
     }
