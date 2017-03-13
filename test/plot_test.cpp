@@ -153,36 +153,165 @@ void LinePlotTest() {
 }
 
 /*
- * PlotBwTreeData() - Plots data used in BwTree paper
+ * PlotBwTreePreallocation() - Plots data used in BwTree paper
  */
-void PlotBwTreeData() {
-  BarChart bc{};
+void PlotBwTreePreallocation() {
+  BarChart bc1{};
   
-  bc.AppendBarGroup<double>("IO", {2.77, 3.15});
-  bc.AppendBarGroup<double>("RO", {2.13, 2.49});
-  bc.AppendBarGroup<double>("RU", {3.08, 3.27});
-  bc.AppendBarGroup<double>("SI", {0.62, 0.81});
+  bc1.AppendBarGroup<double>("IO", {2.77, 3.15});
+  bc1.AppendBarGroup<double>("RO", {2.13, 2.49});
+  bc1.AppendBarGroup<double>("RU", {3.08, 3.27});
+  bc1.AppendBarGroup<double>("SI", {0.62, 0.81});
   
-  bc.AppendBarName("Independently Alloc'ed");
-	bc.AppendBarName("Pre-Alloc'ed");
+  bc1.AppendBarName("Independently Alloc'ed");
+	bc1.AppendBarName("Pre-Alloc'ed");
 	
-	bc.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
 
-	bc.SetLegendFlag(false);
+	bc1.SetLegendFlag(false);
 
-	bc.Draw("preallocation-mono.pdf.pdf");
+	bc1.Draw("preallocation-mono.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Mono	Preallocation
+	BarChart bc2{};
+	
+	bc2.AppendBarGroup<double>("IO", {0.78, 0.94});
+  bc2.AppendBarGroup<double>("RO", {2.09, 2.46});
+  bc2.AppendBarGroup<double>("RU", {2.72, 3.07});
+  bc2.AppendBarGroup<double>("SI", {0.51, 0.64});
+  
+  bc2.AppendBarName("Independently Alloc'ed");
+	bc2.AppendBarName("Pre-Alloc'ed");
+
+	bc2.SetLegendFlag(false);
+
+	bc2.Draw("preallocation-rand.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Email	Preallocation
+	BarChart bc3{};
+	
+	bc3.AppendBarGroup<double>("IO", {0.52, 0.61});
+  bc3.AppendBarGroup<double>("RO", {1.23, 1.42});
+  bc3.AppendBarGroup<double>("RU", {1.3, 1.55});
+  bc3.AppendBarGroup<double>("SI", {0.39, 0.45});
+  
+  bc3.AppendBarName("Independently Alloc'ed");
+	bc3.AppendBarName("Pre-Alloc'ed");
+
+	bc3.SetLegendFlag(false);
+
+	bc3.Draw("preallocation-email.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Memory	Preallocation
+	BarChart bc4{};
+	
+	bc4.AppendBarGroup<double>("RO", {1.055, 1.115});
+  bc4.AppendBarGroup<double>("RU", {1.580, 1.615});
+  bc4.AppendBarGroup<double>("SI", {3.195, 3.270});
+  
+  bc4.AppendBarName("Independently Alloc'ed");
+	bc4.AppendBarName("Pre-Alloc'ed");
+
+  bc4.SetYAxisLabel("Memory Footprint (GB)");
+
+	bc4.SetLegendFlag(false);
+
+	bc4.Draw("preallocation-memory.pdf");
 	
 	return;
 }
+
+/*
+ * PlotBwTreeMicroIndex() - Plots data used in BwTree paper
+ */
+void PlotBwTreeMicroIndex() {
+  BarChart bc1{};
+  
+  bc1.AppendBarGroup<double>("IO", {2.79, 3.15});
+  bc1.AppendBarGroup<double>("RO", {2.08, 2.49});
+  bc1.AppendBarGroup<double>("RU", {3.01, 3.27});
+  bc1.AppendBarGroup<double>("SI", {0.57, 0.81});
+  
+  bc1.AppendBarName("Independently Alloc'ed");
+	bc1.AppendBarName("Pre-Alloc'ed");
+	
+	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+
+	bc1.SetLegendFlag(false);
+
+	bc1.Draw("microindex-mono.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Mono	Preallocation
+	BarChart bc2{};
+	
+	bc2.AppendBarGroup<double>("IO", {0.77, 0.94});
+  bc2.AppendBarGroup<double>("RO", {2.11, 2.46});
+  bc2.AppendBarGroup<double>("RU", {2.81, 3.07});
+  bc2.AppendBarGroup<double>("SI", {0.48, 0.64});
+  
+  bc2.AppendBarName("Independently Alloc'ed");
+	bc2.AppendBarName("Pre-Alloc'ed");
+
+	bc2.SetLegendFlag(false);
+
+	bc2.Draw("microindex-rand.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Email Preallocation
+	BarChart bc3{};
+	
+	bc3.AppendBarGroup<double>("IO", {0.50, 0.61});
+  bc3.AppendBarGroup<double>("RO", {1.23, 1.42});
+  bc3.AppendBarGroup<double>("RU", {1.31, 1.55});
+  bc3.AppendBarGroup<double>("SI", {0.32, 0.45});
+  
+  bc3.AppendBarName("Independently Alloc'ed");
+	bc3.AppendBarName("Pre-Alloc'ed");
+
+	bc3.SetLegendFlag(false);
+
+	bc3.Draw("microindex-email.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Memory	Preallocation
+	BarChart bc4{};
+	
+	bc4.AppendBarGroup<double>("RO", {1.060, 1.115});
+  bc4.AppendBarGroup<double>("RU", {1.590, 1.615});
+  bc4.AppendBarGroup<double>("SI", {3.195, 3.270});
+  
+  bc4.AppendBarName("Independently Alloc'ed");
+	bc4.AppendBarName("Pre-Alloc'ed");
+
+  bc4.SetYAxisLabel("Memory Footprint (GB)");
+
+	bc4.SetLegendFlag(false);
+
+	bc4.Draw("microindex-memory.pdf");
+	
+	return;
+}
+
 
 int main() {
 	ColorTest();
 	PrintListTest();
 	RoundUpTest();
-	BarPlotTest();
-	LinePlotTest();
+	//BarPlotTest();
+	//LinePlotTest();
 	
-	PlotBwTreeData();
-
+	PlotBwTreePreallocation();
+  PlotBwTreeMicroIndex();
+  
 	return 0;
 }
