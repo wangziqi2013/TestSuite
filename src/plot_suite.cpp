@@ -4,11 +4,11 @@
 PythonInterpreter *PythonInterpreter::p = new PythonInterpreter{};
 
 // This is the maximum number of bars in a group
-const size_t MAX_COLOR_COUNT = 9;
+const size_t MAX_COLOR_COUNT = 7;
 
 Color RED_COLOR_SCHEME[] = {
   //Color{"#fff7ec"}, 
-  Color{"#fee8c8"}, 
+  //Color{"#fee8c8"}, 
   Color{"#fdd49e"}, 
   Color{"#fdbb84"}, 
   Color{"#fc8d59"}, 
@@ -20,7 +20,7 @@ Color RED_COLOR_SCHEME[] = {
 
 Color BLUE_COLOR_SCHEME[] = {
   //Color{"#fff7fb"}, 
-  Color{"#ece7f2"}, 
+  //Color{"#ece7f2"}, 
   Color{"#d0d1e6"}, 
   Color{"#a6bddb"}, 
   Color{"#74a9cf"}, 
@@ -36,9 +36,9 @@ ChartParameter default_chart_param{
   // Height
   5.0L,   
   // X tick font size
-  16,  
+  18,  
   // y tick font size
-  14,
+  16,
   // x title font size  
   20,
   // y title font size

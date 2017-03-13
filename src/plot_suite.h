@@ -477,10 +477,10 @@ class BarChart {
    * that the number of bar group is 0 
    */ 
   double GetBarWidth() const {
-    // Start with 2 as the left and right padding 
-    size_t bar_count = 2UL;
+    // Start with 1 as the right padding 
+    size_t bar_count = 1UL;
     for(const BarGroup &bg : group_list) {
-      bar_count += bg.GetSize(); 
+      bar_count += (bg.GetSize() + 1); 
     } 
     
     // Then divide width by the bar count 
