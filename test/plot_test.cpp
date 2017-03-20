@@ -158,10 +158,10 @@ void LinePlotTest() {
 void PlotBwTreePreallocation() {
   BarChart bc1{};
   
-  bc1.AppendBarGroup<double>("IO", {2.77, 3.15});
-  bc1.AppendBarGroup<double>("RO", {2.13, 2.49});
-  bc1.AppendBarGroup<double>("RU", {3.08, 3.27});
-  bc1.AppendBarGroup<double>("SI", {0.62, 0.81});
+  bc1.AppendBarGroup<double>("Insert\\nOnly", {2.77, 3.15});
+  bc1.AppendBarGroup<double>("Read\\nOnly", {2.13, 2.49});
+  bc1.AppendBarGroup<double>("Read\\nUpdate", {3.08, 3.27});
+  bc1.AppendBarGroup<double>("Scan\\nInsert", {0.62, 0.81});
   
   bc1.AppendBarName("Independently Alloc'ed");
 	bc1.AppendBarName("Pre-Alloc'ed");
@@ -169,6 +169,7 @@ void PlotBwTreePreallocation() {
 	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
 
 	bc1.SetLegendFlag(false);
+	bc1.SetYUpperLimitMinimum(5.0);
 
 	bc1.Draw("preallocation-mono.pdf");
 	
@@ -177,15 +178,16 @@ void PlotBwTreePreallocation() {
   // Mono	Preallocation
 	BarChart bc2{};
 	
-	bc2.AppendBarGroup<double>("IO", {0.78, 0.94});
-  bc2.AppendBarGroup<double>("RO", {2.09, 2.46});
-  bc2.AppendBarGroup<double>("RU", {2.72, 3.07});
-  bc2.AppendBarGroup<double>("SI", {0.51, 0.64});
+	bc2.AppendBarGroup<double>("Insert\\nOnly", {0.78, 0.94});
+  bc2.AppendBarGroup<double>("Read\\nOnly", {2.09, 2.46});
+  bc2.AppendBarGroup<double>("Read\\nUpdate", {2.72, 3.07});
+  bc2.AppendBarGroup<double>("Scan\\nInsert", {0.51, 0.64});
   
   bc2.AppendBarName("Independently Alloc'ed");
 	bc2.AppendBarName("Pre-Alloc'ed");
 
 	bc2.SetLegendFlag(false);
+	bc2.SetYUpperLimitMinimum(5.0);
 
 	bc2.Draw("preallocation-rand.pdf");
 	
@@ -194,15 +196,16 @@ void PlotBwTreePreallocation() {
   // Email	Preallocation
 	BarChart bc3{};
 	
-	bc3.AppendBarGroup<double>("IO", {0.52, 0.61});
-  bc3.AppendBarGroup<double>("RO", {1.23, 1.42});
-  bc3.AppendBarGroup<double>("RU", {1.3, 1.55});
-  bc3.AppendBarGroup<double>("SI", {0.39, 0.45});
+	bc3.AppendBarGroup<double>("Insert\\nOnly", {0.52, 0.61});
+  bc3.AppendBarGroup<double>("Read\\nOnly", {1.23, 1.42});
+  bc3.AppendBarGroup<double>("Read\\nUpdate", {1.3, 1.55});
+  bc3.AppendBarGroup<double>("Scan\\nInsert", {0.39, 0.45});
   
   bc3.AppendBarName("Independently Alloc'ed");
 	bc3.AppendBarName("Pre-Alloc'ed");
 
 	bc3.SetLegendFlag(false);
+	bc3.SetYUpperLimitMinimum(5.0);
 
 	bc3.Draw("preallocation-email.pdf");
 	
@@ -233,10 +236,10 @@ void PlotBwTreePreallocation() {
 void PlotBwTreeMicroIndex() {
   BarChart bc1{};
   
-  bc1.AppendBarGroup<double>("IO", {2.79, 3.15});
-  bc1.AppendBarGroup<double>("RO", {2.08, 2.49});
-  bc1.AppendBarGroup<double>("RU", {3.01, 3.27});
-  bc1.AppendBarGroup<double>("SI", {0.57, 0.81});
+  bc1.AppendBarGroup<double>("Insert\\nOnly", {2.79, 3.15});
+  bc1.AppendBarGroup<double>("Read\\nOnly", {2.08, 2.49});
+  bc1.AppendBarGroup<double>("Read\\nUpdate", {3.01, 3.27});
+  bc1.AppendBarGroup<double>("Scan\\nInsert", {0.57, 0.81});
   
   bc1.AppendBarName("Independently Alloc'ed");
 	bc1.AppendBarName("Pre-Alloc'ed");
@@ -244,6 +247,7 @@ void PlotBwTreeMicroIndex() {
 	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
 
 	bc1.SetLegendFlag(false);
+	bc1.SetYUpperLimitMinimum(5.0);
 
 	bc1.Draw("microindex-mono.pdf");
 	
@@ -252,15 +256,16 @@ void PlotBwTreeMicroIndex() {
   // Mono	Microindex
 	BarChart bc2{};
 	
-	bc2.AppendBarGroup<double>("IO", {0.77, 0.94});
-  bc2.AppendBarGroup<double>("RO", {2.11, 2.46});
-  bc2.AppendBarGroup<double>("RU", {2.81, 3.07});
-  bc2.AppendBarGroup<double>("SI", {0.48, 0.64});
+	bc2.AppendBarGroup<double>("Insert\\nOnly", {0.77, 0.94});
+  bc2.AppendBarGroup<double>("Read\\nOnly", {2.11, 2.46});
+  bc2.AppendBarGroup<double>("Read\\nUpdate", {2.81, 3.07});
+  bc2.AppendBarGroup<double>("Scan\\nInsert", {0.48, 0.64});
   
   bc2.AppendBarName("Independently Alloc'ed");
 	bc2.AppendBarName("Pre-Alloc'ed");
 
 	bc2.SetLegendFlag(false);
+	bc2.SetYUpperLimitMinimum(5.0);
 
 	bc2.Draw("microindex-rand.pdf");
 	
@@ -269,15 +274,16 @@ void PlotBwTreeMicroIndex() {
   // Email Microindex
 	BarChart bc3{};
 	
-	bc3.AppendBarGroup<double>("IO", {0.50, 0.61});
-  bc3.AppendBarGroup<double>("RO", {1.23, 1.42});
-  bc3.AppendBarGroup<double>("RU", {1.31, 1.55});
-  bc3.AppendBarGroup<double>("SI", {0.32, 0.45});
+	bc3.AppendBarGroup<double>("Insert\\nOnly", {0.50, 0.61});
+  bc3.AppendBarGroup<double>("Read\\nOnly", {1.23, 1.42});
+  bc3.AppendBarGroup<double>("Read\\nUpdate", {1.31, 1.55});
+  bc3.AppendBarGroup<double>("Scan\\nInsert", {0.32, 0.45});
   
   bc3.AppendBarName("Independently Alloc'ed");
 	bc3.AppendBarName("Pre-Alloc'ed");
 
 	bc3.SetLegendFlag(false);
+	bc3.SetYUpperLimitMinimum(5.0);
 
 	bc3.Draw("microindex-email.pdf");
 	
@@ -371,15 +377,18 @@ void PlotBwTreeGC() {
 void PlotBwTreeCompare() {
   BarChart bc1{};
   
-  bc1.AppendBarGroup<double>("IO", {2.94, 3.15});
-  bc1.AppendBarGroup<double>("RO", {4.37, 2.49});
-  bc1.AppendBarGroup<double>("RU", {3.97, 3.27});
-  bc1.AppendBarGroup<double>("SI", {0.06, 0.81});
+  bc1.AppendBarGroup<double>("Insert\\nOnly", {2.67, 3.33, 2.94, 3.15});
+  bc1.AppendBarGroup<double>("Read\\nOnly", {2.02, 1.01, 4.37, 2.49});
+  bc1.AppendBarGroup<double>("Read\\nUpdate", {2.89, 0.86, 3.97, 3.27});
+  bc1.AppendBarGroup<double>("Scan\\nInsert", {0.55, 0.00, 0.06, 0.81});
   
+  bc1.AppendBarName("BwTree");
+  bc1.AppendBarName("SkipList");
   bc1.AppendBarName("MassTree");
 	bc1.AppendBarName("OpenBwTree");
 	
 	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc1.SetYUpperLimitMinimum(5.0);
 
 	bc1.SetLegendFlag(false);
 
@@ -390,15 +399,18 @@ void PlotBwTreeCompare() {
   // Rand	Compare
 	BarChart bc2{};
 	
-	bc2.AppendBarGroup<double>("IO", {1.94, 0.94});
-  bc2.AppendBarGroup<double>("RO", {4.16, 2.46});
-  bc2.AppendBarGroup<double>("RU", {3.65, 3.07});
-  bc2.AppendBarGroup<double>("SI", {0.06, 0.64});
+	bc2.AppendBarGroup<double>("Insert\\nOnly", {0.77, 0.36, 1.94, 0.94});
+  bc2.AppendBarGroup<double>("Read\\nOnly", {1.97, 0.72, 4.16, 2.46});
+  bc2.AppendBarGroup<double>("Read\\nUpdate", {2.63, 0.60, 3.65, 3.07});
+  bc2.AppendBarGroup<double>("Scan\\nInsert", {0.47, 0.00, 0.06, 0.64});
   
+  bc2.AppendBarName("BwTree");
+  bc2.AppendBarName("SkipList");
   bc2.AppendBarName("MassTree");
 	bc2.AppendBarName("OpenBwTree");
 
 	bc2.SetLegendFlag(false);
+	bc2.SetYUpperLimitMinimum(5.0);
 
 	bc2.Draw("compare-rand.pdf");
 	
@@ -407,15 +419,18 @@ void PlotBwTreeCompare() {
   // Email compare
 	BarChart bc3{};
 	
-	bc3.AppendBarGroup<double>("IO", {1.33, 0.61});
-  bc3.AppendBarGroup<double>("RO", {3.61, 1.42});
-  bc3.AppendBarGroup<double>("RU", {3.36, 1.55});
-  bc3.AppendBarGroup<double>("SI", {0.05, 0.45});
+	bc3.AppendBarGroup<double>("Insert\\nOnly", {0.48, 0.32, 1.33, 0.61});
+  bc3.AppendBarGroup<double>("Read\\nOnly", {1.20, 0.67, 3.61, 1.42});
+  bc3.AppendBarGroup<double>("Read\\nUpdate", {1.27, 0.52, 3.36, 1.55});
+  bc3.AppendBarGroup<double>("Scan\\nInsert", {0.32, 0.00, 0.05, 0.45});
   
+  bc3.AppendBarName("BwTree");
+  bc3.AppendBarName("SkipList");
   bc3.AppendBarName("MassTree");
 	bc3.AppendBarName("OpenBwTree");
 	
 	bc3.SetLegendFlag(false);
+	bc3.SetYUpperLimitMinimum(5.0);
 
 	bc3.Draw("compare-email.pdf");
 	
@@ -424,12 +439,14 @@ void PlotBwTreeCompare() {
   // Memory	Compare
 	BarChart bc4{};
 	
-	bc4.AppendBarGroup<double>("Mono", {2.558, 1.115});
-  bc4.AppendBarGroup<double>("Rand", {2.728, 1.615});
-  bc4.AppendBarGroup<double>("Email", {6.733, 3.270});
+	bc4.AppendBarGroup<double>("Mono", {1.095, 2.144, 2.558, 1.115});
+  bc4.AppendBarGroup<double>("Rand", {1.580, 2.041, 2.728, 1.615});
+  bc4.AppendBarGroup<double>("Email", {3.250, 3.220, 6.733, 3.270});
   
-  bc4.AppendBarName("Independently Alloc'ed");
-	bc4.AppendBarName("Pre-Alloc'ed");
+  bc4.AppendBarName("BwTree");
+  bc4.AppendBarName("SkipList");
+  bc4.AppendBarName("MassTree");
+	bc4.AppendBarName("OpenBwTree");
 
   bc4.SetYAxisLabel("Memory Footprint (GB)");
 

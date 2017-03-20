@@ -449,6 +449,9 @@ class BarChart {
   double y_upper_limit;
   double y_lower_limit;
   
+  // This is the mininum value for y upper limit
+  double y_upper_limit_minimum;
+  
   // Element i in this list is the name that will be printed on the 
   // legend for bar i in the plot
   std::vector<std::string> bar_name_list;
@@ -539,7 +542,12 @@ class BarChart {
     // the param object
     max *= param.y_limit_ratio;
     
-    return RoundUpToPoint5(max);
+    double rounded_value = RoundUpToPoint5(max);
+    if(rounded_value < y_upper_limit_minimum) {
+      rounded_value = y_upper_limit_minimum;
+    }
+    
+    return rounded_value;
   }
   
   /*
@@ -836,6 +844,7 @@ class BarChart {
     bar_width{},
     y_upper_limit{},
     y_lower_limit{},
+    y_upper_limit_minimum{}, 
     bar_name_list{},
     x_axis_label{},
     y_axis_label{},
@@ -847,6 +856,16 @@ class BarChart {
    * Destructor
    */
   ~BarChart() {}
+  
+  /*
+   * SetYUpperLimitMinimum() - Sets the minimum value of the upper limit
+   *                          to enforce a lower bound for the range
+   */
+  void SetYUpperLimitMinimum(double value) {
+    y_upper_limit_minimum = value;
+    
+    return; 
+  }
   
   /*
    * AppendBarGroup() - Appends a new bar group into the chart
