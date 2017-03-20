@@ -377,9 +377,9 @@ void PlotBwTreeGC() {
 void PlotBwTreeCompare() {
   BarChart bc1{};
   
-  bc1.AppendBarGroup<double>("Insert\\nOnly", {2.67, 3.33, 2.94, 3.15});
-  bc1.AppendBarGroup<double>("Read\\nOnly", {2.02, 1.01, 4.37, 2.49});
-  bc1.AppendBarGroup<double>("Read\\nUpdate", {2.89, 0.86, 3.97, 3.27});
+  bc1.AppendBarGroup<double>("Insert\\nOnly", {2.67, 3.33, 2.91, 3.15});
+  bc1.AppendBarGroup<double>("Read\\nOnly", {2.02, 1.01, 4.08, 2.49});
+  bc1.AppendBarGroup<double>("Read\\nUpdate", {2.89, 0.86, 3.85, 3.27});
   bc1.AppendBarGroup<double>("Scan\\nInsert", {0.55, 0.00, 0.06, 0.81});
   
   bc1.AppendBarName("BwTree");
@@ -399,9 +399,9 @@ void PlotBwTreeCompare() {
   // Rand	Compare
 	BarChart bc2{};
 	
-	bc2.AppendBarGroup<double>("Insert\\nOnly", {0.77, 0.36, 1.94, 0.94});
-  bc2.AppendBarGroup<double>("Read\\nOnly", {1.97, 0.72, 4.16, 2.46});
-  bc2.AppendBarGroup<double>("Read\\nUpdate", {2.63, 0.60, 3.65, 3.07});
+	bc2.AppendBarGroup<double>("Insert\\nOnly", {0.77, 0.36, 1.85, 0.94});
+  bc2.AppendBarGroup<double>("Read\\nOnly", {1.97, 0.72, 3.99, 2.46});
+  bc2.AppendBarGroup<double>("Read\\nUpdate", {2.63, 0.60, 3.43, 3.07});
   bc2.AppendBarGroup<double>("Scan\\nInsert", {0.47, 0.00, 0.06, 0.64});
   
   bc2.AppendBarName("BwTree");
@@ -419,9 +419,9 @@ void PlotBwTreeCompare() {
   // Email compare
 	BarChart bc3{};
 	
-	bc3.AppendBarGroup<double>("Insert\\nOnly", {0.48, 0.32, 1.33, 0.61});
-  bc3.AppendBarGroup<double>("Read\\nOnly", {1.20, 0.67, 3.61, 1.42});
-  bc3.AppendBarGroup<double>("Read\\nUpdate", {1.27, 0.52, 3.36, 1.55});
+	bc3.AppendBarGroup<double>("Insert\\nOnly", {0.48, 0.32, 1.23, 0.61});
+  bc3.AppendBarGroup<double>("Read\\nOnly", {1.20, 0.67, 3.42, 1.42});
+  bc3.AppendBarGroup<double>("Read\\nUpdate", {1.27, 0.52, 3.20, 1.55});
   bc3.AppendBarGroup<double>("Scan\\nInsert", {0.32, 0.00, 0.05, 0.45});
   
   bc3.AppendBarName("BwTree");
@@ -441,7 +441,7 @@ void PlotBwTreeCompare() {
 	
 	bc4.AppendBarGroup<double>("Mono", {1.095, 2.144, 2.558, 1.115});
   bc4.AppendBarGroup<double>("Rand", {1.580, 2.041, 2.728, 1.615});
-  bc4.AppendBarGroup<double>("Email", {3.250, 3.220, 6.733, 3.270});
+  bc4.AppendBarGroup<double>("Email", {3.250, 3.220, 5.255, 3.270});
   
   bc4.AppendBarName("BwTree");
   bc4.AppendBarName("SkipList");
@@ -457,6 +457,92 @@ void PlotBwTreeCompare() {
 	return;
 }
 
+/*
+ * PlotBwTreeMTCompare() - Plots data used in BwTree paper
+ */
+void PlotBwTreeMTCompare() {
+  BarChart bc1{};
+  
+  bc1.AppendBarGroup<double>("Insert\\nOnly", {5.49, 1.19, 0.00, 14.39});
+  bc1.AppendBarGroup<double>("Read\\nOnly", {11.07, 8.70, 0.00, 36.14});
+  bc1.AppendBarGroup<double>("Read\\nUpdate", {10.26, 1.93, 0.00, 17.90});
+  bc1.AppendBarGroup<double>("Scan\\nInsert", {5.56, 0.00, 0.00, 7.72});
+  
+  bc1.AppendBarName("BwTree");
+  bc1.AppendBarName("SkipList");
+  bc1.AppendBarName("MassTree");
+	bc1.AppendBarName("OpenBwTree");
+	
+	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc1.SetYUpperLimitMinimum(45.0);
+
+	bc1.SetLegendFlag(false);
+
+	bc1.Draw("mt-compare-mono.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Rand	Compare
+	BarChart bc2{};
+	
+	bc2.AppendBarGroup<double>("Insert\\nOnly", {5.37, 1.13, 0.00, 9.06});
+  bc2.AppendBarGroup<double>("Read\\nOnly", {10.85, 7.54, 0.00, 21.77});
+  bc2.AppendBarGroup<double>("Read\\nUpdate", {8.92, 1.79, 0.00, 11.86});
+  bc2.AppendBarGroup<double>("Scan\\nInsert", {4.73, 0.00, 0.00, 6.40});
+  
+  bc2.AppendBarName("BwTree");
+  bc2.AppendBarName("SkipList");
+  bc2.AppendBarName("MassTree");
+	bc2.AppendBarName("OpenBwTree");
+
+	bc2.SetLegendFlag(false);
+	bc2.SetYUpperLimitMinimum(45.0);
+
+	bc2.Draw("mt-compare-rand.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Email compare
+	BarChart bc3{};
+	
+	bc3.AppendBarGroup<double>("Insert\\nOnly", {0.00, 0.00, 0.00, 0.00});
+  bc3.AppendBarGroup<double>("Read\\nOnly", {0.00, 0.00, 0.00, 0.00});
+  bc3.AppendBarGroup<double>("Read\\nUpdate", {0.00, 0.00, 0.00, 0.00});
+  bc3.AppendBarGroup<double>("Scan\\nInsert", {0.00, 0.00, 0.00, 0.00});
+  
+  bc3.AppendBarName("BwTree");
+  bc3.AppendBarName("SkipList");
+  bc3.AppendBarName("MassTree");
+	bc3.AppendBarName("OpenBwTree");
+	
+	bc3.SetLegendFlag(false);
+	bc3.SetYUpperLimitMinimum(45.0);
+
+	bc3.Draw("mt-compare-email.pdf");
+	
+	///////////////////////////////////////////////////////////////////
+
+  // Memory	Compare
+	BarChart bc4{};
+	
+	bc4.AppendBarGroup<double>("Mono", {1.505, 2.043, 0.000, 1.539});
+  bc4.AppendBarGroup<double>("Rand", {1.705, 2.160, 0.000, 1.757});
+  bc4.AppendBarGroup<double>("Email", {0.000, 0.000, 0.000, 0.000});
+  
+  bc4.AppendBarName("BwTree");
+  bc4.AppendBarName("SkipList");
+  bc4.AppendBarName("MassTree");
+	bc4.AppendBarName("OpenBwTree");
+
+  bc4.SetYAxisLabel("Memory Footprint (GB)");
+
+	bc4.SetLegendFlag(false);
+
+	bc4.Draw("mt-compare-memory.pdf");
+	
+	return;
+}
+
 int main() {
 	ColorTest();
 	PrintListTest();
@@ -464,10 +550,11 @@ int main() {
 	//BarPlotTest();
 	//LinePlotTest();
 	
-	PlotBwTreePreallocation();
-  PlotBwTreeMicroIndex();
-  PlotBwTreeGC();
-  PlotBwTreeCompare();
+	//PlotBwTreePreallocation();
+  //PlotBwTreeMicroIndex();
+  //PlotBwTreeGC();
+  //PlotBwTreeCompare();
+  PlotBwTreeMTCompare();
   
 	return 0;
 }
