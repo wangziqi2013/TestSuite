@@ -30,6 +30,21 @@ Color BLUE_COLOR_SCHEME[] = {
   Color{"#023858"},
 };
 
+Color GREEN_COLOR_SCHEME[] = {
+  Color{"#c9df8a"},
+  Color{"#77ab59"},
+  Color{"#36802d"},
+  Color{"#234d20"},
+};
+
+Color BROWN_COLOR_SCHEME[] = {
+  Color{"#c1ad6b"},
+  Color{"#a89c52"},
+  Color{"#909342"},
+  Color{"#778346"},
+  Color{"#58693c"},
+};
+
 // This is the marker we use for line plots
 char MARKER_SCHEME[] = {
   'o', 'x', 'v', '*', '+', '>', '^',
