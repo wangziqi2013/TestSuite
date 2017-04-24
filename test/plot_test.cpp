@@ -674,6 +674,31 @@ void PlotBwTreeConfig() {
 	return;
 }
 
+/*
+ * PlotHighContentionMT() - This function plots high contention monotomic
+ *                          integer key insertion troughput
+ */
+void PlotHighContentionMT() {
+	BarChart bc1{};
+
+	bc1.AppendBarGroup<double>("Insert\\nOnly", {11.17, 17.13, 25.89, 29.91, 18.17});
+  
+	bc1.AppendBarName("BwTree");
+	bc1.AppendBarName("OpenBwTree");
+	bc1.AppendBarName("MassTree");
+	bc1.AppendBarName("BTree");
+  bc1.AppendBarName("ART");
+	
+	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc1.SetYUpperLimitMinimum(40.0);
+
+	bc1.SetLegendFlag(true);
+
+	bc1.Draw("mt-ht-mono-insert.pdf");
+
+	return;
+}
+
 int main() {
 	ColorTest();
 	PrintListTest();
@@ -684,13 +709,15 @@ int main() {
 	//PlotBwTreePreallocation();
   //PlotBwTreeMicroIndex();
   //PlotBwTreeGC();
-  PlotBwTreeCompare();
-  PlotBwTreeMTCompare();
+  //PlotBwTreeCompare();
+  //PlotBwTreeMTCompare();
   //PlotBwTreeSummary();
   //PlotBwTreeSummary2();
   
 	// This is plotted using Python script
   //PlotBwTreeConfig();
+
+	PlotHighContentionMT();
   
 	return 0;
 }

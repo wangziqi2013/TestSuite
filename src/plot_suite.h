@@ -468,6 +468,9 @@ class BarChart {
   // Otherwise they are aligned horizontally
   // This is by default set to true
   bool legend_vertical_flag;
+
+  // Whether we draw grid on the plot
+  bool draw_grid_flag;
  private: 
   
   /*
@@ -849,7 +852,8 @@ class BarChart {
     x_axis_label{},
     y_axis_label{},
     draw_legend_flag{true},
-    legend_vertical_flag{true} 
+    legend_vertical_flag{true},
+    draw_grid_flag{false}
   {}
   
   /*
@@ -969,6 +973,15 @@ class BarChart {
     draw_legend_flag = value;
     
     return; 
+  }
+
+  /*
+   * SetGridFlag() - Sets whether to draw grid
+   */
+  inline void SetGridFlag(bool value) {
+    draw_grid_flag = value;
+
+    return;
   }
   
   /*
