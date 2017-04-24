@@ -159,6 +159,7 @@ class Color {
 
 extern Color RED_COLOR_SCHEME[];
 extern Color BLUE_COLOR_SCHEME[];
+extern Color BROWN_COLOR_SCHEME[];
 
 // This is the predefined marker scheme for line plots
 extern char MARKER_SCHEME[];
@@ -1002,6 +1003,16 @@ class BarChart {
   inline void SetLegendVerticalFlag(bool value) {
     legend_vertical_flag = value;
     
+    return;
+  }
+
+  /*
+   * SetColorScheme() - Sets the color scheme by giving an array of 
+   *                    Color objects
+   */
+  inline void SetColorScheme(const Color *color_p) {
+    color_scheme_p = color_p;
+
     return;
   }
   
