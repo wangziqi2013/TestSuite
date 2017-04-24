@@ -397,6 +397,7 @@ void PlotBwTreeCompare() {
 	bc1.SetYUpperLimitMinimum(18.0);
 
 	bc1.SetLegendFlag(false);
+	bc1.SetYGridFlag(true);
 
 	bc1.Draw("compare-mono.pdf");
 	
@@ -419,6 +420,7 @@ void PlotBwTreeCompare() {
 	bc2.SetLegendFlag(false);
 	bc2.SetYAxisLabel("Throughput (Millon Ops/Sec)");
 	bc2.SetYUpperLimitMinimum(18.0);
+	bc2.SetYGridFlag(true);
 
 	bc2.Draw("compare-rand.pdf");
 	
@@ -441,6 +443,7 @@ void PlotBwTreeCompare() {
 	bc3.SetLegendFlag(false);
 	bc3.SetYAxisLabel("Throughput (Millon Ops/Sec)");
 	bc3.SetYUpperLimitMinimum(18.0);
+	bc3.SetYGridFlag(true);
 
 	bc3.Draw("compare-email.pdf");
 	
@@ -462,6 +465,7 @@ void PlotBwTreeCompare() {
   bc4.SetYAxisLabel("Memory (GB)");
 
 	bc4.SetLegendFlag(false);
+	bc4.SetYGridFlag(true);
 
 	bc4.Draw("compare-memory.pdf");
 	
@@ -489,6 +493,7 @@ void PlotBwTreeMTCompare() {
 	bc1.SetYUpperLimitMinimum(110.0);
 
 	bc1.SetLegendFlag(false);
+	bc1.SetYGridFlag(true);
 
 	bc1.Draw("mt-compare-mono.pdf");
 	
@@ -511,6 +516,7 @@ void PlotBwTreeMTCompare() {
 	bc2.SetLegendFlag(false);
 	bc2.SetYAxisLabel("Throughput (Millon Ops/Sec)");
 	bc2.SetYUpperLimitMinimum(110.0);
+	bc2.SetYGridFlag(true);
 
 	bc2.Draw("mt-compare-rand.pdf");
 	
@@ -533,6 +539,7 @@ void PlotBwTreeMTCompare() {
 	bc3.SetLegendFlag(false);
 	bc3.SetYAxisLabel("Throughput (Millon Ops/Sec)");
 	bc3.SetYUpperLimitMinimum(110.0);
+	bc3.SetYGridFlag(true);
 
 	bc3.Draw("mt-compare-email.pdf");
 	
@@ -555,6 +562,7 @@ void PlotBwTreeMTCompare() {
 
 	bc4.SetLegendFlag(false);
 	bc4.SetYUpperLimitMinimum(8.0);
+	bc4.SetYGridFlag(true);
 
 	bc4.Draw("mt-compare-memory.pdf");
 	
@@ -587,6 +595,7 @@ void PlotBwTreeSummary() {
 	bc1.SetYUpperLimitMinimum(28.0);
 
 	bc1.SetLegendFlag(true);
+	bc1.SetYGridFlag(true);
 
 	bc1.Draw("bwtree-summary.pdf");
 	
@@ -617,6 +626,7 @@ void PlotBwTreeSummary2() {
 	bc1.SetYUpperLimitMinimum(52.0);
 
 	bc1.SetLegendFlag(true);
+	bc1.SetYGridFlag(true);
 
 	bc1.Draw("bwtree-summary-2.pdf");
 	
@@ -681,7 +691,7 @@ void PlotBwTreeConfig() {
 void PlotHighContentionMT() {
 	BarChart bc1{};
 
-	bc1.AppendBarGroup<double>("Insert\\nOnly", {11.17, 17.13, 25.89, 29.91, 18.17});
+	bc1.AppendBarGroup<double>("", {11.17, 17.13, 25.89, 29.91, 18.17});
   
 	bc1.AppendBarName("BwTree");
 	bc1.AppendBarName("OpenBwTree");
@@ -693,6 +703,7 @@ void PlotHighContentionMT() {
 	bc1.SetYUpperLimitMinimum(40.0);
 
 	bc1.SetLegendFlag(true);
+	bc1.SetYGridFlag(true);
 
 	bc1.Draw("mt-ht-mono-insert.pdf");
 
@@ -700,19 +711,19 @@ void PlotHighContentionMT() {
 }
 
 int main() {
-	ColorTest();
-	PrintListTest();
-	RoundUpTest();
+	//ColorTest();
+	//PrintListTest();
+	//RoundUpTest();
 	//BarPlotTest();
 	//LinePlotTest();
 	
 	//PlotBwTreePreallocation();
   //PlotBwTreeMicroIndex();
   //PlotBwTreeGC();
-  //PlotBwTreeCompare();
-  //PlotBwTreeMTCompare();
-  //PlotBwTreeSummary();
-  //PlotBwTreeSummary2();
+  PlotBwTreeCompare();
+  PlotBwTreeMTCompare();
+  PlotBwTreeSummary();
+  PlotBwTreeSummary2();
   
 	// This is plotted using Python script
   //PlotBwTreeConfig();

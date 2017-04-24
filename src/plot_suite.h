@@ -470,7 +470,8 @@ class BarChart {
   bool legend_vertical_flag;
 
   // Whether we draw grid on the plot
-  bool draw_grid_flag;
+  bool draw_x_grid_flag;
+  bool draw_y_grid_flag;
  private: 
   
   /*
@@ -853,7 +854,8 @@ class BarChart {
     y_axis_label{},
     draw_legend_flag{true},
     legend_vertical_flag{true},
-    draw_grid_flag{false}
+    draw_x_grid_flag{false},
+    draw_y_grid_flag{false}
   {}
   
   /*
@@ -976,10 +978,19 @@ class BarChart {
   }
 
   /*
-   * SetGridFlag() - Sets whether to draw grid
+   * SetXGridFlag() - Sets whether to draw grid for X axis
    */
-  inline void SetGridFlag(bool value) {
-    draw_grid_flag = value;
+  inline void SetXGridFlag(bool value) {
+    draw_x_grid_flag = value;
+
+    return;
+  }
+
+  /*
+   * SetXGridFlag() - Sets whether to draw grid for Y axis
+   */
+  inline void SetYGridFlag(bool value) {
+    draw_y_grid_flag = value;
 
     return;
   }
@@ -1030,6 +1041,15 @@ class BarChart {
                     param.legend_position.c_str(),
                     param.legend_font_size,
                     legend_col_num);
+    }
+
+    // If we need to draw grid as the background then just set the grids
+    if(draw_x_grid_flag == true) {
+      buffer.Append("ax.xaxis.grid(True)\n\n");
+    }
+
+    if(draw_y_grid_flag == true) {
+      buffer.Append("ax.yaxis.grid(True)\n\n");
     }
     
     // The last step is to output the file
