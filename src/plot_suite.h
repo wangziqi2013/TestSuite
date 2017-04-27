@@ -140,7 +140,7 @@ class Color {
    * The color will be appended like this: #RRGGBB where RR GG BB are 8 bit
    * color values in hex
    */
-  void AppendToBuffer(Buffer *buffer_p) {
+  void AppendToBuffer(Buffer *buffer_p) const {
     buffer_p->Append('#');
     
     // Then Append RGB respectively
@@ -160,6 +160,7 @@ class Color {
 extern Color RED_COLOR_SCHEME[];
 extern Color BLUE_COLOR_SCHEME[];
 extern Color BROWN_COLOR_SCHEME[];
+extern Color MIXED_COLOR_SCHEME[];
 
 // This is the predefined marker scheme for line plots
 extern char MARKER_SCHEME[];
@@ -425,7 +426,7 @@ class BarChart {
   
   // This is a pointer to the color scheme, which could be predefined
   // or customized
-  Color *color_scheme_p;
+const Color *color_scheme_p;
   
   // The following are parameters that could be tweaked but usually kept
   // as-is
@@ -988,7 +989,7 @@ class BarChart {
   }
 
   /*
-   * SetXGridFlag() - Sets whether to draw grid for Y axis
+   * SetYGridFlag() - Sets whether to draw grid for Y axis
    */
   inline void SetYGridFlag(bool value) {
     draw_y_grid_flag = value;
@@ -1062,6 +1063,10 @@ class BarChart {
     if(draw_y_grid_flag == true) {
       buffer.Append("ax.yaxis.grid(True)\n\n");
     }
+
+    // This function call makes sure that the grid is under the 
+    // bar chart, not above it
+    buffer.Append("ax.set_axisbelow(True)\n\n");
     
     // The last step is to output the file
     buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')\n\n", 
@@ -1180,7 +1185,7 @@ class LineChart {
   ChartParameter param;
   
   // This points to the color scheme of the plot
-  Color *color_scheme_p;
+  const Color *color_scheme_p;
   
   // These two are buffers that are used to print python code
   Buffer buffer;
@@ -1192,6 +1197,9 @@ class LineChart {
   // This flag determines whether legends are stacked together in the
   // vertical direction
   bool legend_vertical_flag;
+
+  bool draw_x_grid_flag;
+  bool draw_y_grid_flag;
 
  private:
    
@@ -1278,7 +1286,7 @@ class LineChart {
     max *= param.y_limit_ratio;
     
     // And then round to the nearest 0.5
-    return RoundUpToPoint5(max);
+    return 30.0; //RoundUpToPoint5(max);
   }
   
   /*
@@ -1339,13 +1347,25 @@ class LineChart {
     buffer{},
     legend_buffer{},
     draw_legend_flag{true},
-    legend_vertical_flag{true} 
+    legend_vertical_flag{true},
+    draw_x_grid_flag{false},
+    draw_y_grid_flag{false}
   {}
   
   /*
    * Destructor
    */
   ~LineChart() {}
+
+  /*
+   * SetColorScheme() - Sets the color scheme by giving an array of 
+   *                    Color objects
+   */
+  inline void SetColorScheme(const Color *color_p) {
+    color_scheme_p = color_p;
+
+    return;
+  }
   
   /*
    * AppendXValueList() - Adding values into the x axis data points
@@ -1518,7 +1538,7 @@ class LineChart {
       color_scheme_p[index].AppendToBuffer(&buffer);
       
       // Next add label
-      buffer.Printf("\", label=\"%s\", linewidth=2, marker='%c')\n", 
+      buffer.Printf("\", label=\"%s\", linewidth=4, marker='%c')\n", 
                     line_name_list[index].c_str(), 
                     MARKER_SCHEME[index]);
       
@@ -1574,6 +1594,15 @@ class LineChart {
                     param.legend_font_size,
                     legend_col_num);
     }
+
+    // If we need to draw grid as the background then just set the grids
+    if(draw_x_grid_flag == true) {
+      buffer.Append("ax.xaxis.grid(True)\n\n");
+    }
+
+    if(draw_y_grid_flag == true) {
+      buffer.Append("ax.yaxis.grid(True)\n\n");
+    }
     
     // Specify output file name
     buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')\n", 
@@ -1595,6 +1624,24 @@ class LineChart {
    */
   void DrawLegend(const std::string &file_name) {
     
+  }
+
+  /*
+   * SetXGridFlag() - Sets whether to draw grid for X axis
+   */
+  inline void SetXGridFlag(bool value) {
+    draw_x_grid_flag = value;
+
+    return;
+  }
+
+  /*
+   * SetYGridFlag() - Sets whether to draw grid for Y axis
+   */
+  inline void SetYGridFlag(bool value) {
+    draw_y_grid_flag = value;
+
+    return;
   }
 };
 

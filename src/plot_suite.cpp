@@ -45,6 +45,26 @@ Color BROWN_COLOR_SCHEME[] = {
   Color{"#58693c"},
 };
 
+Color DARK_RED_COLOR_SCHEME[] = {
+  //Color{"#fff7ec"}, 
+  //Color{"#fee8c8"}, 
+  //Color{"#fdd49e"}, 
+  //Color{"#fdbb84"}, 
+  //Color{"#fc8d59"}, 
+  Color{"#ef6548"}, 
+  Color{"#d7301f"}, 
+  Color{"#b30000"}, 
+  Color{"#7f0000"},
+};
+
+Color MIXED_COLOR_SCHEME[] = {
+  Color{"#fdd49e"}, 
+  Color{"#d7301f"},
+  Color{"#c1d2ce"},
+  Color{"#5a57ae"},
+  Color{"#5c2d5a"},
+};
+
 // This is the marker we use for line plots
 char MARKER_SCHEME[] = {
   'o', 'x', 'v', '*', '+', '>', '^',

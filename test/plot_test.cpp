@@ -166,10 +166,12 @@ void PlotBwTreePreallocation() {
   bc1.AppendBarName("Independently Alloc'ed");
 	bc1.AppendBarName("Pre-Alloc'ed");
 	
-	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc1.SetYAxisLabel("Throughput (Million Ops/Sec)");
 
 	bc1.SetLegendFlag(false);
 	bc1.SetYUpperLimitMinimum(5.0);
+	bc1.SetYGridFlag(true);
+	bc1.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc1.Draw("preallocation-mono.pdf");
 	
@@ -187,8 +189,10 @@ void PlotBwTreePreallocation() {
 	bc2.AppendBarName("Pre-Alloc'ed");
 
 	bc2.SetLegendFlag(false);
-	bc2.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc2.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	bc2.SetYUpperLimitMinimum(5.0);
+	bc2.SetYGridFlag(true);
+	bc2.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc2.Draw("preallocation-rand.pdf");
 	
@@ -206,8 +210,10 @@ void PlotBwTreePreallocation() {
 	bc3.AppendBarName("Pre-Alloc'ed");
 
 	bc3.SetLegendFlag(false);
-	bc3.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc3.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	bc3.SetYUpperLimitMinimum(5.0);
+	bc3.SetYGridFlag(true);
+	bc3.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc3.Draw("preallocation-email.pdf");
 	
@@ -225,6 +231,8 @@ void PlotBwTreePreallocation() {
 
   bc4.SetYAxisLabel("Memory (GB)");
 	bc4.SetLegendFlag(false);
+	bc4.SetYGridFlag(true);
+	bc4.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc4.Draw("preallocation-memory.pdf");
 	
@@ -245,10 +253,12 @@ void PlotBwTreeMicroIndex() {
   bc1.AppendBarName("Independently Alloc'ed");
 	bc1.AppendBarName("Pre-Alloc'ed");
 	
-	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc1.SetYAxisLabel("Throughput (Million Ops/Sec)");
 
 	bc1.SetLegendFlag(false);
 	bc1.SetYUpperLimitMinimum(5.0);
+	bc1.SetYGridFlag(true);
+	bc1.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc1.Draw("microindex-mono.pdf");
 	
@@ -266,8 +276,10 @@ void PlotBwTreeMicroIndex() {
 	bc2.AppendBarName("Pre-Alloc'ed");
 
 	bc2.SetLegendFlag(false);
-	bc2.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc2.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	bc2.SetYUpperLimitMinimum(5.0);
+	bc2.SetYGridFlag(true);
+	bc2.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc2.Draw("microindex-rand.pdf");
 	
@@ -285,8 +297,10 @@ void PlotBwTreeMicroIndex() {
 	bc3.AppendBarName("Pre-Alloc'ed");
 
 	bc3.SetLegendFlag(false);
-	bc3.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc3.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	bc3.SetYUpperLimitMinimum(5.0);
+	bc3.SetYGridFlag(true);
+	bc3.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc3.Draw("microindex-email.pdf");
 	
@@ -305,6 +319,8 @@ void PlotBwTreeMicroIndex() {
   bc4.SetYAxisLabel("Memory (GB)");
 
 	bc4.SetLegendFlag(false);
+	bc4.SetYGridFlag(true);
+	bc4.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc4.Draw("microindex-memory.pdf");
 	
@@ -329,6 +345,8 @@ void PlotBwTreeGC() {
 
 	lc1.SetLegendFlag(false);
 	lc1.SetLegendVerticalFlag(false);
+	lc1.SetYGridFlag(true);
+	lc1.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	lc1.Draw("gc-mono.pdf");
 	
@@ -348,6 +366,8 @@ void PlotBwTreeGC() {
 	lc2.SetLegendFlag(false);
 	lc2.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	lc2.SetLegendVerticalFlag(false);
+	lc2.SetYGridFlag(true);
+	lc2.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	lc2.Draw("gc-rand.pdf");
 	
@@ -367,11 +387,29 @@ void PlotBwTreeGC() {
 	lc3.SetLegendFlag(false);
 	lc3.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	lc3.SetLegendVerticalFlag(false);
+	lc3.SetYGridFlag(true);
+	lc3.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	lc3.Draw("gc-email.pdf");
 	
 	///////////////////////////////////////////////////////////////////
 	// GC memory
+
+	BarChart bc4{};
+	
+	bc4.AppendBarGroup<double>("Mono\\nInt", {0.985, 1.115});
+  bc4.AppendBarGroup<double>("Rand\\nInt", {1.423, 1.615});
+  bc4.AppendBarGroup<double>("Email\\nKey", {3.104, 3.270});
+  
+  bc4.AppendBarName("Centralized GC");
+	bc4.AppendBarName("Distributed GC");
+
+  bc4.SetYAxisLabel("Memory (GB)");
+	bc4.SetLegendFlag(false);
+	bc4.SetYGridFlag(true);
+	bc4.SetColorScheme(MIXED_COLOR_SCHEME);
+
+	bc4.Draw("gc-memory.pdf");
   
   return;
 }
@@ -393,11 +431,12 @@ void PlotBwTreeCompare() {
 	bc1.AppendBarName("BTree");
   bc1.AppendBarName("ART");
   
-	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc1.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	bc1.SetYUpperLimitMinimum(18.0);
 
 	bc1.SetLegendFlag(false);
 	bc1.SetYGridFlag(true);
+	bc1.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc1.Draw("compare-mono.pdf");
 	
@@ -418,9 +457,10 @@ void PlotBwTreeCompare() {
   bc2.AppendBarName("ART");
 
 	bc2.SetLegendFlag(false);
-	bc2.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc2.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	bc2.SetYUpperLimitMinimum(18.0);
 	bc2.SetYGridFlag(true);
+	bc2.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc2.Draw("compare-rand.pdf");
 	
@@ -441,9 +481,10 @@ void PlotBwTreeCompare() {
   bc3.AppendBarName("ART");
 	
 	bc3.SetLegendFlag(false);
-	bc3.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc3.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	bc3.SetYUpperLimitMinimum(18.0);
 	bc3.SetYGridFlag(true);
+	bc3.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc3.Draw("compare-email.pdf");
 	
@@ -466,6 +507,7 @@ void PlotBwTreeCompare() {
 
 	bc4.SetLegendFlag(false);
 	bc4.SetYGridFlag(true);
+	bc4.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc4.Draw("compare-memory.pdf");
 	
@@ -489,11 +531,12 @@ void PlotBwTreeMTCompare() {
 	bc1.AppendBarName("BTree");
   bc1.AppendBarName("ART");
 	
-	bc1.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc1.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	bc1.SetYUpperLimitMinimum(110.0);
 
 	bc1.SetLegendFlag(false);
 	bc1.SetYGridFlag(true);
+	bc1.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc1.Draw("mt-compare-mono.pdf");
 	
@@ -514,9 +557,10 @@ void PlotBwTreeMTCompare() {
   bc2.AppendBarName("ART");
 
 	bc2.SetLegendFlag(false);
-	bc2.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc2.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	bc2.SetYUpperLimitMinimum(110.0);
 	bc2.SetYGridFlag(true);
+	bc2.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc2.Draw("mt-compare-rand.pdf");
 	
@@ -537,9 +581,10 @@ void PlotBwTreeMTCompare() {
   bc3.AppendBarName("ART");
 	
 	bc3.SetLegendFlag(false);
-	bc3.SetYAxisLabel("Throughput (Millon Ops/Sec)");
+	bc3.SetYAxisLabel("Throughput (Million Ops/Sec)");
 	bc3.SetYUpperLimitMinimum(110.0);
 	bc3.SetYGridFlag(true);
+	bc3.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc3.Draw("mt-compare-email.pdf");
 	
@@ -563,6 +608,7 @@ void PlotBwTreeMTCompare() {
 	bc4.SetLegendFlag(false);
 	bc4.SetYUpperLimitMinimum(8.0);
 	bc4.SetYGridFlag(true);
+	bc4.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc4.Draw("mt-compare-memory.pdf");
 	
@@ -596,6 +642,7 @@ void PlotBwTreeSummary() {
 
 	bc1.SetLegendFlag(true);
 	bc1.SetYGridFlag(true);
+	bc1.SetColorScheme(BROWN_COLOR_SCHEME);
 
 	bc1.Draw("bwtree-summary.pdf");
 	
@@ -627,6 +674,7 @@ void PlotBwTreeSummary2() {
 
 	bc1.SetLegendFlag(true);
 	bc1.SetYGridFlag(true);
+	bc1.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc1.Draw("bwtree-summary-2.pdf");
 	
@@ -704,6 +752,7 @@ void PlotHighContentionMT() {
 
 	bc1.SetLegendFlag(true);
 	bc1.SetYGridFlag(true);
+	bc1.SetColorScheme(MIXED_COLOR_SCHEME);
 
 	bc1.Draw("mt-ht-mono-insert.pdf");
 
@@ -719,11 +768,11 @@ int main() {
 	
 	//PlotBwTreePreallocation();
   //PlotBwTreeMicroIndex();
-  //PlotBwTreeGC();
-  PlotBwTreeCompare();
-  PlotBwTreeMTCompare();
-  PlotBwTreeSummary();
-  PlotBwTreeSummary2();
+  PlotBwTreeGC();
+  //PlotBwTreeCompare();
+  //PlotBwTreeMTCompare();
+  //PlotBwTreeSummary();
+  //PlotBwTreeSummary2();
   
 	// This is plotted using Python script
   //PlotBwTreeConfig();
