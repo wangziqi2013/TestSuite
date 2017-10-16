@@ -58,39 +58,59 @@ Color DARK_RED_COLOR_SCHEME[] = {
 };
 
 Color MIXED_COLOR_SCHEME[] = {
-  Color{"#fdd49e"}, 
-  Color{"#d7301f"},
-  Color{"#c1d2ce"},
-  Color{"#5a57ae"},
-  Color{"#5c2d5a"},
+  Color{"#D6C5A1"}, 
+  Color{"#bfa688"},
+  Color{"#8c6c45"},
+  Color{"#956344"},
+  Color{"#c29e6e"},
+  Color{"#597370"},
+};
+
+Color GRAY_SCALE_SCHEME[] = {
+  Color{"#EEEEEE"},
+  Color{"#CCCCCC"},
+  Color{"#AAAAAA"},
+  Color{"#888888"},
+  Color{"#666666"},
+  Color{"#444444"},
+  Color{"#222222"},
+  // Hope we will never use this
+  Color{"#000000"},
 };
 
 // This is the marker we use for line plots
 char MARKER_SCHEME[] = {
-  'o', 'x', 'v', '*', '+', '>', '^',
+  'o', 's', 'x', 'v', '*', '+', '>', '^',
+};
+
+// This represents filling patterns of each bar
+char HATCH_SCHEME[] = {
+  '-', '+', 'x', '\\', '*', 'o', 'O', '.',
 };
 
 ChartParameter default_chart_param{
   // Width 
-  8.0L,   
+  12.0L,   
   // Height
-  5.0L,   
+  6.0L,   
   // X tick font size
-  18,  
+  28,  
   // y tick font size
-  16,
+  28,
   // x title font size  
-  20,
+  28,
   // y title font size
-  20,
+  28,
   // Legend font size
-  12,
+  28,
+  // overbar_font_size
+  26,
   // y limit ratio
   1.1L,
   // Legend position
   //"right"
 	//"center left"
-	//"upper right"
+	"upper right",
 	//"lower right"
 	//"best"
 	//"center"
@@ -99,8 +119,17 @@ ChartParameter default_chart_param{
 	//"upper left"
 	//"upper center"
 	//"lower center"
-  "upper left"
+  //"upper left"
   //"best"
+
+  // Error bar color
+  "#FF0000",
+  // Error bar size (not line width)
+  // Note that we will adjust this value according to the
+  // size of the bar
+  10,
+  // Error bar line width
+  6
 };
 
 // import statements

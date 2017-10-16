@@ -161,9 +161,12 @@ extern Color RED_COLOR_SCHEME[];
 extern Color BLUE_COLOR_SCHEME[];
 extern Color BROWN_COLOR_SCHEME[];
 extern Color MIXED_COLOR_SCHEME[];
+extern Color GRAY_SCALE_SCHEME[];
 
 // This is the predefined marker scheme for line plots
 extern char MARKER_SCHEME[];
+// This is the predefined filling scheme for bar plots
+extern char HATCH_SCHEME[];
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -183,11 +186,22 @@ class BarGroup {
   // across groups, because the drawing routine could recognize it
   // correctly
   std::vector<double> data_list; 
+
  public:
   
   // The list of positions. This list must be of the same 
   // length of data list 
   std::vector<double> pos_list;
+
+  // This is a list of errors which will be displayed as the 
+  // error bar in tha bar chart
+  // This member is optional - we could choose not to add any
+  // error, in which case the erorr bar will NOT be printed 
+  // (it is different from havinf an error bar of 0)
+
+  // This is the error less than the value of the bar
+  std::vector<double> error_below_list;
+  std::vector<double> error_above_list;
   
   // The position of the X axis tick 
   // Note that this is the central of the x tick
@@ -202,6 +216,8 @@ class BarGroup {
     title{p_title},
     data_list{}, 
     pos_list{},
+    error_below_list{},
+    error_above_list{},
     x_tick_pos{} 
   {}
   
@@ -228,6 +244,19 @@ class BarGroup {
     
     return; 
   }
+
+  /*
+   * AppendError() - Appends an error into the corresponding position
+   */
+  template <typename T>
+  void AppendError(size_t count, const std::pair<T, T> *data_p) {
+    for(size_t i = 0;i < count;i++) {
+      error_below_list.push_back(data_p[i].first);
+      error_above_list.push_back(data_p[i].second);
+    }
+
+    return;
+  }
   
   /*
    * Append() - Append a vector into the current data list
@@ -242,6 +271,16 @@ class BarGroup {
     
     return;
   }
+
+  /*
+   * AppendError() - Appends a vector of error points
+   */
+  template <typename T>
+  inline void AppendError(const std::vector<std::pair<T, T>> &v) {
+    AppendError(v.size(), &v[0]);
+
+    return;
+  }
   
   /*
    * Append() - This function appends a single element into the data list
@@ -251,6 +290,16 @@ class BarGroup {
     Append(1, &data);
     
     return; 
+  }
+
+  /*
+   * AppendError() - Appends a single error point
+   */
+  template <typename T>
+  inline void AppendError(std::pair<T, T> data) {
+    AppendError(1, &data);
+
+    return;
   }
   
   /*
@@ -341,6 +390,9 @@ class ChartParameter {
   
   // Legend font size
   uint32_t legend_font_size;
+
+  // This is the font size for number or text over each bar in the bar chart
+  uint32_t overbar_font_size;
   
   // This is for determining the value of y limit
   // We multiply this value and the maximum y value as the y limit
@@ -350,6 +402,12 @@ class ChartParameter {
   // matplotlib could recognize (i.e. we do not use C++ constants for 
   // this field)
   std::string legend_position;
+
+  // The color and size of the error bar
+  // Color is a HEX representation of the color: #RRGGBB
+  std::string error_bar_color;
+  uint32_t error_bar_size;
+  uint32_t error_bar_line_width;
   
   /*
    * Constructor
@@ -361,8 +419,12 @@ class ChartParameter {
                  uint32_t p_x_font_size,
                  uint32_t p_y_font_size,
                  uint32_t p_legend_font_size,
+                 uint32_t p_overbar_font_size,
                  double p_y_limit_ratio,
-                 const std::string &p_legend_position) :
+                 const std::string &p_legend_position,
+                 const std::string &p_error_bar_color,
+                 uint32_t p_error_bar_size,
+                 uint32_t p_error_bar_line_width) :
     width{p_width},
     height{p_height},
     x_tick_font_size{p_x_tick_font_size},
@@ -370,8 +432,12 @@ class ChartParameter {
     x_font_size{p_x_font_size},
     y_font_size{p_y_font_size},
     legend_font_size{p_legend_font_size},
+    overbar_font_size{p_overbar_font_size},
     y_limit_ratio{p_y_limit_ratio},
-    legend_position{p_legend_position}
+    legend_position{p_legend_position},
+    error_bar_color{p_error_bar_color},
+    error_bar_size{p_error_bar_size},
+    error_bar_line_width{p_error_bar_line_width}
   {}
   
   /*
@@ -385,8 +451,12 @@ class ChartParameter {
     x_font_size{other.x_font_size},
     y_font_size{other.y_font_size},
     legend_font_size{other.legend_font_size},
+    overbar_font_size{other.overbar_font_size},
     y_limit_ratio{other.y_limit_ratio},
-    legend_position{other.legend_position}
+    legend_position{other.legend_position},
+    error_bar_color{other.error_bar_color},
+    error_bar_size{other.error_bar_size},
+    error_bar_line_width{other.error_bar_line_width}
   {}
 };
 
@@ -426,7 +496,7 @@ class BarChart {
   
   // This is a pointer to the color scheme, which could be predefined
   // or customized
-const Color *color_scheme_p;
+  const Color *color_scheme_p;
   
   // The following are parameters that could be tweaked but usually kept
   // as-is
@@ -474,6 +544,15 @@ const Color *color_scheme_p;
   // Whether we draw grid on the plot
   bool draw_x_grid_flag;
   bool draw_y_grid_flag;
+
+  // Whether we draw an error bar. If this is turned on then the error
+  // must be added
+  bool draw_error_flag;
+
+  // Whether we draw a hatch on each bar in the group
+  bool draw_hatch_flag;
+
+  int legend_col_num;
  private: 
   
   /*
@@ -639,6 +718,52 @@ const Color *color_scheme_p;
     
     return;
   }
+
+  /*
+   * RoundToSignificantDigits() - Round the given number to a given number of
+   *                              significant digits
+   */
+  static void RoundToSignificantDigits(const double num, 
+                                       const int digits, 
+                                       char output[]) {
+    assert(digits > 0);
+    if(digits <= 0) {
+      throw "Significant digits must be > 0";
+    }
+
+    // We first print #digit digits after the point to the buffer
+    sprintf(output, "%.*lf", digits, num);
+
+    // We must be able to see the dot, because we always print digits after 
+    // the dot
+    int dot_index;
+    for(int i = 0;;i++) {
+      char ch = output[i];
+      if(ch == '\0') {
+        assert(false);
+        throw "Did not see dot in the floating point number";
+      } else if(ch == '.') {
+        dot_index = i;
+        break;
+      }
+    }
+
+    if(dot_index >= digits) {
+      // Fill all remaining bits before the dot as digit 0
+      for(int i = digits;i < dot_index;i++) {
+        output[i] = '0';
+      }
+
+      // Terminate the string
+      output[dot_index] = '\0';
+    } else {
+      // In this branch, we just need to find the last significant digit and 
+      // set the char after it as NUL
+      output[digits + 1] = '\0';
+    }
+
+    return;
+  }
   
   /*
    * PrintBarPlot() - This is middle part of the plot script that draws
@@ -662,9 +787,13 @@ const Color *color_scheme_p;
       // Need these two buffer to represent data list and pos list
       Buffer data_buffer;
       Buffer pos_buffer;
+      // This is a 2 * N array, because we have two numbers for each bar in the
+      // bar group
+      Buffer error_buffer;
       
       data_buffer.Append('[');
       pos_buffer.Append('[');
+      error_buffer.Append("[[");
       
       // Then for each group check their i-th bar, and if it exists
       // we add it to the buffer
@@ -672,12 +801,26 @@ const Color *color_scheme_p;
         if(i < bg.GetSize()) {
           data_buffer.Printf("%f, ", bg.GetDataList().at(i)); 
           pos_buffer.Printf("%f, ", bg.pos_list.at(i));
+
+          if(draw_error_flag == true) {
+            error_buffer.Printf("%f, ", bg.error_below_list.at(i));
+          }
+        }
+      }
+
+      error_buffer.Append("], [");
+      for(const BarGroup &bg : group_list) {
+        if(i < bg.GetSize()) {
+          if(draw_error_flag == true) {
+            error_buffer.Printf("%f, ", bg.error_above_list.at(i));
+          }
         }
       }
       
       // Close the two Python lists
       data_buffer.Append(']');
       pos_buffer.Append(']');
+      error_buffer.Append("]]");
       
       // First of the line calling bar() method
       // and then save the rect object on variable "rect"
@@ -696,21 +839,67 @@ const Color *color_scheme_p;
       
       buffer.Printf("\", label=\"");
       buffer.Append(bar_name_list[i].c_str());
-      buffer.Printf("\")\n");
+      buffer.Append("\"");
+      
+      // This adds an extra argument: yerr to the draw routine
+      // and it carries the error buffer we just generated
+      if(draw_error_flag == true) {
+        buffer.Append(", yerr=");
+        buffer.Append(error_buffer);
+        // Append a dict object to the parameter list
+        // which specifies the color and cap size of the error bar
+        buffer.Printf(", error_kw={\"ecolor\": \"%s\""
+                      ", \"capsize\": %u"
+                      ", \"elinewidth\": %u}",
+                      param.error_bar_color.c_str(),
+                      param.error_bar_size,
+                      param.error_bar_line_width);
+      }
+
+      // If we draw the filling pattern then just use the one 
+      // character hatch
+      if(draw_hatch_flag == true) {
+        char hatch = HATCH_SCHEME[i];
+        if(hatch == '\\') {
+          buffer.Printf(", hatch=\"\\%c\"", hatch);
+        } else {
+          buffer.Printf(", hatch=\"%c\"", hatch);
+        }
+      }
+
+      buffer.Printf(")\n");
       
       int j = 0;
+      // We need to do that using the scale
+      const double gap_between_text_and_bar = 0.015 * (y_upper_limit - y_lower_limit);
+      
       for(const BarGroup &bg : group_list) {
+        double gap_with_error_bar = gap_between_text_and_bar;
+        // If we draw error bar, then also need to adjust the text up to
+        // avoid colliding with the error bar
+        // The unit to go up is the error bar length above the bar
+        if(draw_error_flag == true) {
+          gap_with_error_bar += bg.error_above_list[i];
+        }
+
+        char digit_buffer[256];
+        RoundToSignificantDigits(bg.GetDataList()[i], 2, digit_buffer);
+
         if(i < bg.GetSize()) {
           // This is the drawing statement for numeric labels over each bar
           buffer.Printf("ax.text(rect_list[%d].get_x() + "
-                        "rect_list[%d].get_width() / 2, %f, \"%.2f\","
+                        "rect_list[%d].get_width() / %lf, %f, \"%s\","
                         " ha='center', va='bottom', rotation='vertical',"
-                        " fontsize=%d)\n", 
+                        " fontsize=%u)\n", 
                         j, 
                         j, 
-                        bg.GetDataList()[i], 
-                        bg.GetDataList()[i],
-                        param.y_tick_font_size);
+                        1.7,  // This is a minor tweak to adjust horizontal 
+                              // position of the text
+                        bg.GetDataList()[i] + gap_with_error_bar, 
+                        digit_buffer, // This is printed text for value
+                                      // Note: We have a dedicated argument for 
+                                      // this
+                        param.overbar_font_size);
           
           j++;
         }
@@ -795,6 +984,8 @@ const Color *color_scheme_p;
    *   (3) The number of bars in each group must be smaller than or equal to
    *       the maximum value supported (which is a global variable)
    *   (4) There is at least one group
+   *   (5) The number of errors should be consistent with each other and also
+   *       be consistent with the size of the bar group, if error flag is on
    *
    * If any of the above conditions fails we throw an exception
    */
@@ -814,6 +1005,14 @@ const Color *color_scheme_p;
       if(bar_count != bg.GetSize()) {
         assert(false);
         throw "Inconsistent bar count in BarGroup objects";
+      }
+
+      // This checks (5) if we do want to draw error
+      if(draw_error_flag == true && 
+         (bar_count != bg.error_above_list.size() || \
+          bar_count != bg.error_below_list.size())) {
+        assert(false);
+        throw "Inconsistent bar count and error points";
       }
     }
     
@@ -838,7 +1037,7 @@ const Color *color_scheme_p;
    */
   BarChart() :
     group_list{},
-    color_scheme_p{RED_COLOR_SCHEME},
+    color_scheme_p{MIXED_COLOR_SCHEME},
     // Use the default parameters inside the constructor
     // if we need to modify this then just modify it later
     param{default_chart_param},
@@ -857,7 +1056,10 @@ const Color *color_scheme_p;
     draw_legend_flag{true},
     legend_vertical_flag{true},
     draw_x_grid_flag{false},
-    draw_y_grid_flag{false}
+    draw_y_grid_flag{false},
+    draw_error_flag{false},
+    draw_hatch_flag{false},
+    legend_col_num{1}
   {}
   
   /*
@@ -866,10 +1068,18 @@ const Color *color_scheme_p;
   ~BarChart() {}
   
   /*
+   * SetLegendPosition() - Sets the position of the legend in param
+   */
+  inline void SetLegendPosition(const std::string &pos) {
+    param.legend_position = pos;
+    return;
+  }
+
+  /*
    * SetYUpperLimitMinimum() - Sets the minimum value of the upper limit
    *                          to enforce a lower bound for the range
    */
-  void SetYUpperLimitMinimum(double value) {
+  inline void SetYUpperLimitMinimum(double value) {
     y_upper_limit_minimum = value;
     
     return; 
@@ -951,6 +1161,70 @@ const Color *color_scheme_p;
     
     return;
   }
+
+  /*
+   * AppendError() - Appends a list of errors into the last bar group
+   * 
+   * Note that we represent errors as a pair of floating point numbers. The
+   * first field is the error below the value, and the second field is the
+   * error above the value
+   */
+  template <typename T>
+  inline void AppendError(const std::vector<std::pair<T, T>> &error_list) {
+    BarGroup *bg_p = &group_list.back(); 
+    bg_p->AppendError<T>(error_list);
+
+    return;
+  }
+
+  /*
+   * AppendErrorAtIndex() - This function appends error bar information
+   *                        at a given index
+   * 
+   * If index is invalid then throw exception. This function allows users to
+   * append the error bar after they have all finished adding data.
+   */
+  template <typename T>
+  inline void AppendErrorAtIndex(size_t index, 
+                                 const std::vector<std::pair<T, T>> &error_list) {
+    // Check whether the index is valid
+    if(index >= group_list.size()) {
+      assert(false);
+      throw "Index exceeds the maximum number of bars in the plot";
+    }
+
+    BarGroup *bg_p = &group_list.at(index);
+    bg_p->AppendError<T>(error_list);
+
+    return;
+  }
+
+  /*
+   * AppendErrorAtName() - Appends the error array into a bar group with a 
+   *                       given name
+   * 
+   * If the name is not found we just raise an exception
+   */
+  template <typename T>
+  inline void AppendErrorAtName(const std::string &name,
+                                const std::vector<std::pair<T, T>> &error_list) {
+    // This is the index of the bar group with a matching name  
+    size_t index = 0;  
+    for(const std::string &bg_name : bar_name_list) {
+      if(bg_name == name) {
+        // We have found the bar group, and now just insert the error into
+        // the list of bar groups
+        AppendErrorAtIndex(index, error_list);
+        return;
+      }
+
+      index++;
+    }
+
+    // Fail here
+    assert(false);
+    throw "Bar group name not found";
+  }
   
   /*
    * SetXAxisLabel() - Sets the label on the X axis
@@ -996,6 +1270,18 @@ const Color *color_scheme_p;
 
     return;
   }
+
+  inline void SetWidth(double width) {
+    param.width = width;
+
+    return;
+  }
+
+  inline void SetLegendColumnNum(int num) {
+    legend_col_num = num;
+
+    return;
+  }
   
   /*
    * SetLegendVerticalFlag() - If this is set to true then we draw all legend
@@ -1013,6 +1299,24 @@ const Color *color_scheme_p;
    */
   inline void SetColorScheme(const Color *color_p) {
     color_scheme_p = color_p;
+
+    return;
+  }
+
+  /*
+   * SetDrawErrorFlag() - Sets whether to draw error bar
+   */
+  inline void SetDrawErrorFlag(bool value) {
+    draw_error_flag = value;
+
+    return;
+  }
+
+  /*
+   * SetDrawHatchFlag() - Sets whether to draw the filling patterns
+   */
+  inline void SetDrawHatchFlag(bool value) {
+    draw_hatch_flag = value;
 
     return;
   }
@@ -1040,14 +1344,10 @@ const Color *color_scheme_p;
     
     // At last set legend based on the flag
     if(draw_legend_flag == true) {
-      // This is the number of columns in the legend
-      // If we set it to 1 then there is only 1 column, i.e. legend items are 
-      // stacked vertically
-      int legend_col_num = 1;
       if(legend_vertical_flag == false) {
         legend_col_num = GetMaximumGroupSize();
       }
-      
+
       // Draw the legends
       buffer.Printf("ax.legend(loc=\"%s\", prop={'size':%lu}, ncol=%d)\n\n",
                     param.legend_position.c_str(),
@@ -1087,57 +1387,67 @@ const Color *color_scheme_p;
    * The argument "vertical" specifies whether the items should be stacked
    * vertically or aligned horizontally
    */
-  void DrawLegend(const std::string &output_file_name, bool vertical=false) {
-    Verify();
+  void DrawLegend(const std::string &output_file_name) {
+    // We do not need to verify the consistency of the data, because
+    // As long as we have the label and color, hatch for each bar, it is
+    // possible to draw the buffer
+    //Verify();
     
     // Clear all contents of the buffer
     legend_buffer.Reset();
     
     legend_buffer.Append(PYTHON_IMPORT_PROLOGUE);
     legend_buffer.Append(PYTHON_TEX_PROLOGUE);
-    
-    legend_buffer.Append("import matplotlib.patches as mpatches\n");
-    
-    legend_buffer.Append("fig = plot.figure(figsize=(2, 1))\n");
-    legend_buffer.Append("patches = []\n");
-    legend_buffer.Append("labels = []\n");
-    
+    // Make the figure small enough such that it can be fully covered by
+    // the legend
+    legend_buffer.Append("fig = plot.figure(figsize=(0.001, 0.001))\n\n"
+                         "ax = fig.add_subplot(111)\n\n");
+
     // We need this to address color object
     int index = 0;
-    
     // For each bar name in the bar list we draw the legend
     for(const std::string bar_name : bar_name_list) {
       // Thie creates a patch object using the color and label
       // Linewidth draw the border, and edge color must be black to make it
       // prominent; facecolor is the filling color of the block
-      legend_buffer.Printf(
-        "patches.append(mpatches.Patch(linewidth=1, edgecolor=\"#000000\", "
-        "label=\"%s\", facecolor=\"", 
-        bar_name.c_str());
+      legend_buffer.Printf("ax.bar(0, 0, label=\"%s\", color=\"",
+                           bar_name.c_str(),
+                           HATCH_SCHEME[index]);
       
       // Print color into the buffer  
       color_scheme_p[index].AppendToBuffer(&legend_buffer);
-      legend_buffer.Append("\"))\n");
+      legend_buffer.Append('\"');
       
-      // Also append laels into the list
-      legend_buffer.Printf("labels.append(\"%s\")\n", bar_name.c_str());
+      // If we draw filling patterns on the bar, we also draw them here
+      if(draw_hatch_flag == true) {
+        char hatch = HATCH_SCHEME[index];
+        if(hatch == '\\') {
+          legend_buffer.Printf(", hatch=\"\\%c\"", hatch);
+        } else {
+          legend_buffer.Printf(", hatch=\"%c\"", hatch);
+        }
+      }
+      
+      // Close the function call
+      legend_buffer.Append(")\n");
       
       index++;
     }
     
     legend_buffer.Append('\n');
     
-    // If we need horizontal legend then just use the size of the list
-    int column_count = 1;
-    if(vertical == false) {
-      column_count = static_cast<int>(bar_name_list.size());
+    // We do not check flag for drawing legend, but we do need to check for
+    // the shape of the legend
+    if(legend_vertical_flag == false) {
+      legend_col_num = GetMaximumGroupSize();
     }
-    
-    // If it is horizontal then the number of columns is the numbre of 
-    // members in the bar group
-    legend_buffer.Printf(
-      "fig.legend(patches, labels, loc='center', frameon=False, ncol=%d)\n", 
-      column_count);
+
+    // Draw the legends
+    // Make it always certer to overlap with the bar data
+    legend_buffer.Printf("ax.legend(loc=\"%s\", prop={'size':%lu}, ncol=%d)\n\n",
+                          "center",  
+                          param.legend_font_size,
+                          legend_col_num);
     
     legend_buffer.Printf("plot.savefig(\"%s\", bbox_inches='tight')\n\n", 
                          output_file_name.c_str());
@@ -1149,6 +1459,13 @@ const Color *color_scheme_p;
     ExecutePython(legend_buffer.GetCharData());
     
     return;
+  }
+
+  /*
+   * GetBuffer() - This function returns a char pointer to the internal buffer
+   */
+  const char *GetBuffer() const {
+    return buffer.GetCharData();
   }
 };
 
@@ -1200,6 +1517,8 @@ class LineChart {
 
   bool draw_x_grid_flag;
   bool draw_y_grid_flag;
+
+  int marker_size;
 
  private:
    
@@ -1286,7 +1605,7 @@ class LineChart {
     max *= param.y_limit_ratio;
     
     // And then round to the nearest 0.5
-    return 30.0; //RoundUpToPoint5(max);
+    return 20.0;//RoundUpToPoint5(max);
   }
   
   /*
@@ -1349,13 +1668,22 @@ class LineChart {
     draw_legend_flag{true},
     legend_vertical_flag{true},
     draw_x_grid_flag{false},
-    draw_y_grid_flag{false}
+    draw_y_grid_flag{false},
+    marker_size{8}
   {}
   
   /*
    * Destructor
    */
   ~LineChart() {}
+
+  /*
+   * SetLegendPosition() - Sets the position of the legend in param
+   */
+  inline void SetLegendPosition(const std::string &pos) {
+    param.legend_position = pos;
+    return;
+  }
 
   /*
    * SetColorScheme() - Sets the color scheme by giving an array of 
@@ -1538,9 +1866,10 @@ class LineChart {
       color_scheme_p[index].AppendToBuffer(&buffer);
       
       // Next add label
-      buffer.Printf("\", label=\"%s\", linewidth=4, marker='%c')\n", 
+      buffer.Printf("\", label=\"%s\", linewidth=4, marker='%c', markersize=%d)\n", 
                     line_name_list[index].c_str(), 
-                    MARKER_SCHEME[index]);
+                    MARKER_SCHEME[index],
+                    marker_size);
       
       index++;
     }
@@ -1595,6 +1924,9 @@ class LineChart {
                     legend_col_num);
     }
 
+
+    buffer.Append("ax.set_xlim(0, 21)\n");
+
     // If we need to draw grid as the background then just set the grids
     if(draw_x_grid_flag == true) {
       buffer.Append("ax.xaxis.grid(True)\n\n");
@@ -1640,6 +1972,12 @@ class LineChart {
    */
   inline void SetYGridFlag(bool value) {
     draw_y_grid_flag = value;
+
+    return;
+  }
+
+  inline void SetMarkerSize(int size) {
+    marker_size = size;
 
     return;
   }
